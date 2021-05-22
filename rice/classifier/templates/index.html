@@ -222,10 +222,11 @@
                                 Next
                             </button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
+                        <span id="num1" class="btn btn-sm">
+                            0
+                            <span data-feather="arrow-right"></span>
+                            100
+                        </span>
                     </div>
                 </div>
 
@@ -246,10 +247,11 @@
                                 Next
                             </button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
+                        <span id="num2" class="btn btn-sm">
+                            0
+                            <span data-feather="arrow-right"></span>
+                            100
+                        </span>
                     </div>
                 </div>
 
@@ -270,10 +272,11 @@
                                 Next
                             </button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
+                        <span id="num3" class="btn btn-sm">
+                            0
+                            <span data-feather="arrow-right"></span>
+                            100
+                        </span>
                     </div>
                 </div>
 
@@ -310,7 +313,6 @@
             feather.replace()
 
             var ctx = document.getElementById(id)
-            ctx.innerHTML = "";
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -342,7 +344,8 @@
                         display: true
                     }
                 }
-            })
+            });
+            return myChart;
         }
 
         var t = "{{ test }}".split(",");
@@ -377,14 +380,17 @@
             rf1:document.getElementById('rf1'),
             dtr0:document.getElementById('dtr0'),
             dtr1:document.getElementById('dtr1'),
+            svr:generateGraph(t,svr,'SVR'),
+            rf:generateGraph(t,rf,'RF'),
+            dtr:generateGraph(t,dtr,'DTR'),
+            
         }
 
         checkString = (str) => {
             return (str === "" || str === " ");
         }
-        generateGraph(t,svr,'SVR');
-        generateGraph(t,rf,'RF');
-        generateGraph(t,dtr,'DTR');
+        
+        
 
         changeGraphVal = (which,id)=>{
             if(which === 1){
@@ -392,25 +398,28 @@
                     case "RF":{
                         object.rfStart+=100;
                         object.rfEnd+=100;
+                        object.rf.destroy();
                         if (object.rfStart >= 100) object.rf0.disabled = false;
                         if (object.rfEnd >= 2554) object.rf1.disabled = true;
-                        generateGraph(t,rf,id,object.rfStart,object.rfEnd)
+                        object.rf = generateGraph(t,rf,id,object.rfStart,object.rfEnd)
                         break
                     }
                     case "SVR":{
                         object.svrStart+=100;
                         object.svrEnd+=100;
+                        object.svr.destroy();
                         if (object.svrStart >= 100) object.svr0.disabled = false;
                         if (object.svrEnd >= 2554) object.svr1.disabled = true;
-                        generateGraph(t,rf,id,object.svrStart,object.svrEnd)
+                        object.svr = generateGraph(t,rf,id,object.svrStart,object.svrEnd)
                         break
                     }
                     case "DTR":{
                         object.dtrStart+=100;
                         object.dtrEnd+=100;
+                        object.dtr.destroy();
                         if (object.dtrStart >= 100) object.dtr0.disabled = false;
                         if (object.dtrEnd >= 2554) object.dtr1.disabled = true;
-                        generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
+                        object.dtr = generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
                         break
                     }
                 }
@@ -419,25 +428,28 @@
                     case "RF":{
                         object.rfStart-=100;
                         object.rfEnd-=100;
-                        if (object.rfStart === 0) object.rf0.disabled = false;
+                        object.rf.destroy();
+                        if (object.rfStart <= 0) object.rf0.disabled = false;
                         if (object.rfEnd <= 2500) object.rf1.disabled = false;
-                        generateGraph(t,rf,id,object.rfStart,object.rfEnd)
+                        object.rf =  generateGraph(t,rf,id,object.rfStart,object.rfEnd)
                         break
                     }
                     case "SVR":{
                         object.svrStart-=100;
                         object.svrEnd-=100;
-                        if (object.svrStart === 0) object.svr0.disabled = false;
+                        object.svr.destroy()
+                        if (object.svrStart <= 0) object.svr0.disabled = false;
                         if (object.svrEnd <= 2500) object.svr1.disabled = false;
-                        generateGraph(t,rf,id,object.svrStart,object.svrEnd)
+                        object.svr =  generateGraph(t,rf,id,object.svrStart,object.svrEnd)
                         break
                     }
                     case "DTR":{
                         object.dtrStart-=100;
                         object.dtrEnd-=100;
-                        if (object.dtrStart === 0) object.dtr0.disabled = false;
+                        object.dtr.destroy()
+                        if (object.dtrStart <= 0) object.dtr0.disabled = false;
                         if (object.dtrEnd <= 2500) object.dtr1.disabled = false;
-                        generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
+                        object.dtr = generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
                         break
                     }
                 }
