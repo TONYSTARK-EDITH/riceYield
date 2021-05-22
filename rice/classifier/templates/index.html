@@ -55,39 +55,27 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#fill">
+                            <a class="nav-link active" id="1" aria-current="page" href="#" onclick="changeToDiv(1);">
                                 <span data-feather="home"></span>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#plot">
-                                <span data-feather="file"></span>
-                                Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="shopping-cart"></span>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" id="2" href="#" onclick="changeToDiv(2);">
                                 <span data-feather="bar-chart-2"></span>
-                                Reports
+                                SVR Model 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="layers"></span>
-                                Integrations
+                            <a class="nav-link" id="3" href="#" onclick="changeToDiv(3)">
+                                <span data-feather="database"></span>
+                                Decision Tree
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="4" href="#" onclick="changeToDiv(4);">
+                                <span data-feather="pie-chart"></span>
+                                Random Forest
                             </a>
                         </li>
                     </ul>
@@ -128,7 +116,7 @@
                 </div>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="fill">
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="fill">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Yield Predict</h1>
@@ -146,7 +134,7 @@
                         <input type="number" class="form-control" id="Pottasium" placeholder="Pottasium">
                         <label for="Pottasium">Pottasium (K)</label>
                     </div>
-                    <div class="form-floating mb-3">
+                    <!-- <div class="form-floating mb-3">
                         <input type="number" class="form-control" id="Temperature" placeholder="Temperature">
                         <label for="Temperature">Temperature (°C)</label>
                     </div>
@@ -158,7 +146,7 @@
                     <div class="form-floating mb-3">
                         <input type="number" class="form-control" id="Humidity" placeholder="Humidity">
                         <label for="Humidity">Humidity</label>
-                    </div>
+                    </div> -->
                     <div class="form-floating mb-3">
                         <input type="number" class="form-control" id="Rainfall" placeholder="Rainfall">
                         <label for="Rainfall">Rainfall</label>
@@ -167,28 +155,30 @@
                         aria-controls="offcanvasWithBothOptions">Predict</button>
 
                 </form>
-                <div class="toast-container position-absolute p-3 top-50 start-50 translate-middle border-0" data-bs-backdrop="true"  tabindex="-1" style="z-index: 5">
-                    <div id="toast" class="toast hide text-white bg-dark border-0" role="alert"  data-bs-autohide="false"  aria-live="assertive" aria-atomic="true">
-                      <div class="toast-header border-0">
-                        <img src="{% static 'img/error.svg'  %}" class="rounded me-2" alt="...">
-                        <strong class="me-auto">Yield Predict</strong>
-                        <small></small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                      </div>
-                      <div class="toast-body">
-                        Please fill all the required 
-                      </div>
+                <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0"
+                    style="z-index: 5">
+                    <div id="toast" class="toast hide" role="alert" data-bs-autohide="false" aria-live="assertive"
+                        aria-atomic="true">
+                        <div class="toast-header">
+                            <img src="{% static 'img/error.svg'  %}" class="rounded me-2" alt="...">
+                            <strong class="me-auto">Bootstrap</strong>
+                            <small class="text-muted">11 mins ago</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Please fill all the fields.
+                        </div>
                     </div>
-                  </div>
-            </main>
+                </div>
+            </div>
 
 
 
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="plot">
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="svr">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
+                    <h1 class="h2">SVR Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
@@ -202,7 +192,43 @@
                 </div>
 
                 <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-            </main>
+            </div>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="dtr">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Decision Tree Model</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                            <span data-feather="calendar"></span>
+                            This week
+                        </button>
+                    </div>
+                </div>
+
+                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+            </div>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="rf">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Random Forest Model</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                            <span data-feather="calendar"></span>
+                            This week
+                        </button>
+                    </div>
+                </div>
+
+                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+            </div>
         </div>
         <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
             aria-labelledby="offcanvasWithBothOptionsLabel">
@@ -217,8 +243,95 @@
         </div>
 
     </div>
-
     <script src="{% static 'js/jquery.js' %}"></script>
+
+    <script>
+
+        var object = {
+            nitrogen: document.getElementById("Nitrogen"),
+            phosporus: document.getElementById("Phosphorus"),
+            pottasium: document.getElementById('Pottasium'),
+            rainfall: document.getElementById('Rainfall'),
+            myOffcanvas: document.getElementById('offcanvasWithBothOptions'),
+            pred: document.getElementById('pred'),
+            Predict: $("#Predict"),
+            toast: document.getElementById("toast"),
+            firstDiv: $("#fill"),
+            secDiv: $("#svr"),
+        }
+
+        checkString = (str) => {
+            return (str === "" || str === " ");
+        }
+
+
+
+        object.Predict.submit((event) => {
+            event.preventDefault();
+            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) ||  checkString(object.rainfall.value)) {
+                var toast = new bootstrap.Toast(object.toast);
+                toast.show();
+                return;
+            }
+            var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
+            bsOffcanvas.show();
+        })
+
+
+        console.log(object.nitrogen.value);
+
+
+        changeToDiv = (ind) => {
+            switch (ind) {
+                case 1: {
+                    $("#fill").css("display", "block");
+                    $("#svr").css("display", "none");
+                    $("#dtr").css("display", "none");
+                    $("#rf").css("display", "none");
+                    $("#2").removeClass("active");
+                    $("#1").addClass("active");
+                    $("#3").removeClass("active");
+                    $("#4").removeClass("active");
+                    console.log("eh");
+                    break;
+                }
+                case 2: {
+                    $("#fill").css("display", "none");
+                    $("#svr").css("display", "block");
+                    $("#dtr").css("display", "none");
+                    $("#rf").css("display", "none");
+                    $("#1").removeClass("active");
+                    $("#2").addClass("active");
+                    $("#3").removeClass("active");
+                    $("#4").removeClass("active");
+                    break;
+                }
+                case 3 :{
+                    $("#fill").css("display", "none");
+                    $("#svr").css("display", "none");
+                    $("#rf").css("display", "none");
+                    $("#dtr").css("display", "block");
+                    $("#1").removeClass("active");
+                    $("#3").addClass("active");
+                    $("#2").removeClass("active");
+                    $("#4").removeClass("active");
+                    break;
+                }
+                case 4: {
+                    $("#fill").css("display", "none");
+                    $("#svr").css("display", "none");
+                    $("#dtr").css("display", "none");
+                    $("#rf").css("display", "block");
+                    $("#1").removeClass("active");
+                    $("#4").addClass("active");
+                    $("#2").removeClass("active");
+                    $("#3").removeClass("active");
+                    break;
+                }
+            }
+        }
+    </script>
+
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
@@ -228,7 +341,6 @@
         integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
         crossorigin="anonymous"></script>
     <script src="{% static 'js/dashboard.js' %}"></script>
-    <script src="{% static 'js/index.js' %}"></script>
 </body>
 
 </html>
