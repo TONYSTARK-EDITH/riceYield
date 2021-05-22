@@ -6,8 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.83.1">
+    <meta name="author" content="Tony Stark">
     <title>Rice Yield</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
@@ -63,7 +62,7 @@
                         <li class="nav-item">
                             <a class="nav-link" id="2" href="#" onclick="changeToDiv(2);">
                                 <span data-feather="bar-chart-2"></span>
-                                SVR Model 
+                                SVR Model
                             </a>
                         </li>
                         <li class="nav-item">
@@ -122,35 +121,68 @@
                     <h1 class="h2">Yield Predict</h1>
                 </div>
                 <form class="form-floating" id="Predict">
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Nitrogen" placeholder="Nitrogen">
-                        <label for="Nitrogen">Nitrogen (N)</label>
+                    <div class="row g-2">
+                        <div class="form-floating col-sm-9">
+                            <input type="number" class="form-control" id="Nitrogen" placeholder="Nitrogen" step="any">
+                            <label for="Nitrogen">Nitrogen (N)</label>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-select form-select-md mb-3"
+                                style="padding-top: 16px; padding-bottom: 16px;" id="N"
+                                aria-label=".form-select-lg example">
+                                <option value="1" selected>&nbsp;Kg/ha&nbsp;</option>
+                                <option value="2">&nbsp;g/ha&nbsp;</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Phosphorus" placeholder="Phosphorus">
-                        <label for="Phosphorus">Phosphorus (P)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Pottasium" placeholder="Pottasium">
-                        <label for="Pottasium">Pottasium (K)</label>
-                    </div>
-                    <!-- <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Temperature" placeholder="Temperature">
-                        <label for="Temperature">Temperature (°C)</label>
+                    <div class="row g-2">
+                        <div class="form-floating col-sm-9">
+                            <input type="number" class="form-control" id="Phosphorus" placeholder="Phosphorus"
+                                step="any">
+                            <label for="Phosphorus">Phosphorus (P)</label>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-select form-select-md mb-3"
+                                style="padding-top: 16px; padding-bottom: 16px;" id="P"
+                                aria-label=".form-select-lg example">
+                                <option value="1" selected>&nbsp;Kg/ha&nbsp;</option>
+                                <option value="2">&nbsp;g/ha&nbsp;</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Ph" placeholder="Ph">
-                        <label for="Ph">Ph Value</label>
+                    <div class="row g-2">
+                        <div class="form-floating col-sm-9">
+                            <input type="number" class="form-control" id="Pottasium" placeholder="Pottasium" step="any">
+                            <label for="Pottasium">Pottasium (K)</label>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-select form-select-md mb-3" id="K"
+                                style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
+                                <option value="1" selected>&nbsp;Kg/ha&nbsp;</option>
+                                <option value="2">&nbsp;g/ha&nbsp;</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Humidity" placeholder="Humidity">
-                        <label for="Humidity">Humidity</label>
-                    </div> -->
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="Rainfall" placeholder="Rainfall">
-                        <label for="Rainfall">Rainfall</label>
+
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" id="Rainfall" placeholder="Rainfall" step="any">
+                        <label for="Rainfall">Avg. Rainfall</label>
                     </div>
+                    <div class="row g-2">
+                        <div class="form-floating col-sm-9">
+                            <input type="number" class="form-control" id="Area" placeholder="Area" step="any">
+                            <label for="Area">Area</label>
+                        </div>
+                        <div class="col-auto">
+                            <select class="form-select form-select-md mb-3" id="A"
+                                style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
+                                <option value="1" selected>&nbsp;ha&nbsp;</option>
+                                <option value="2">&nbsp;acre&nbsp;</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <button class="btn btn-primary" type="submit" data-bs-target="#offcanvasWithBothOptions" id="pred"
                         aria-controls="offcanvasWithBothOptions">Predict</button>
 
@@ -181,8 +213,14 @@
                     <h1 class="h2">SVR Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                            <button type="button" id="svr0" class="btn btn-sm btn-outline-secondary" disabled onclick="changeGraphVal(0,'SVR')">
+                                <span data-feather="chevrons-left"></span>
+                                Prev
+                            </button>
+                            <button type="button" id="svr1" class="btn btn-sm btn-outline-secondary" onclick="changeGraphVal(1,'SVR')">
+                                <span data-feather="chevrons-right"></span>
+                                Next
+                            </button>
                         </div>
                         <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                             <span data-feather="calendar"></span>
@@ -191,7 +229,7 @@
                     </div>
                 </div>
 
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+                <canvas class="my-4 w-100" id="SVR" width="900" height="380"></canvas>
             </div>
             <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="dtr">
                 <div
@@ -199,8 +237,14 @@
                     <h1 class="h2">Decision Tree Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                            <button type="button " id="dtr0" class="btn btn-sm btn-outline-secondary"  disabled onclick="changeGraphVal(0,'DTR')">
+                                <span data-feather="chevrons-left"></span>
+                                Prev
+                            </button>
+                            <button type="button" id="dtr1" class="btn btn-sm btn-outline-secondary" onclick="changeGraphVal(1,'DTR')">
+                                <span data-feather="chevrons-right"></span>
+                                Next
+                            </button>
                         </div>
                         <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                             <span data-feather="calendar"></span>
@@ -209,7 +253,7 @@
                     </div>
                 </div>
 
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+                <canvas class="my-4 w-100" id="DTR" width="900" height="380"></canvas>
             </div>
             <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="rf">
                 <div
@@ -217,8 +261,14 @@
                     <h1 class="h2">Random Forest Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                            <button type="button" id="rf0" class="btn btn-sm btn-outline-secondary" disabled onclick="changeGraphVal(0,'RF')">
+                                <span data-feather="chevrons-left"></span>
+                                Prev
+                            </button>
+                            <button type="button" id="rf1" class="btn btn-sm btn-outline-secondary" onclick="changeGraphVal(1,'RF')">
+                                <span data-feather="chevrons-right"></span>
+                                Next
+                            </button>
                         </div>
                         <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                             <span data-feather="calendar"></span>
@@ -227,58 +277,204 @@
                     </div>
                 </div>
 
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+                <canvas class="my-4 w-100" id="RF" width="900" height="380"></canvas>
             </div>
         </div>
         <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
             aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdroped with scrolling</h5>
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Predicted Yield</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
             <div class="offcanvas-body" style="text-align: center;">
-                <p>Try scrolling the rest of the page to see this option in action.</p>
+                <p id="predictedValue">Try scrolling the rest of the page to see this option in action.</p>
             </div>
         </div>
 
     </div>
     <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+        crossorigin="anonymous"></script>
+
+
 
     <script>
+
+        generateGraph = (t, dat, id,start=0,end=100) => {
+            feather.replace()
+
+            var ctx = document.getElementById(id)
+            ctx.innerHTML = "";
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: t.slice(start, end),
+                    datasets: [{
+                        data: dat.slice(start, end),
+                        label: "Predicted",
+                        borderColor: "rgb(62,149,205)",
+                        backgroundColor: "rgb(62,149,205,0.1)",
+                    }, {
+                        data: t.slice(start, end),
+                        type: "scatter",
+                        label: "Accurate",
+                        borderColor: "rgb(196,88,80)",
+                        backgroundColor: "rgb(196,88,80,0.1)",
+                        borderWidth: 2,
+                    }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: true
+                    }
+                }
+            })
+        }
+
+        var t = "{{ test }}".split(",");
+        var svr = "{{ svr }}".split(",");
+        var rf = "{{ rf }}".split(",");
+        var dtr = "{{ dtr }}".split(",");
+
+
 
         var object = {
             nitrogen: document.getElementById("Nitrogen"),
             phosporus: document.getElementById("Phosphorus"),
             pottasium: document.getElementById('Pottasium'),
             rainfall: document.getElementById('Rainfall'),
+            area: document.getElementById('Area'),
             myOffcanvas: document.getElementById('offcanvasWithBothOptions'),
             pred: document.getElementById('pred'),
             Predict: $("#Predict"),
             toast: document.getElementById("toast"),
             firstDiv: $("#fill"),
             secDiv: $("#svr"),
+            predicted: $("#predictedValue"),
+            svrStart:0,
+            svrEnd:100,
+            rfStart:0,
+            rfEnd:100,
+            dtrStart:0,
+            dtrEnd:100,
+            svr0:document.getElementById('svr0'),
+            svr1:document.getElementById('svr1'),
+            rf0:document.getElementById('rf0'),
+            rf1:document.getElementById('rf1'),
+            dtr0:document.getElementById('dtr0'),
+            dtr1:document.getElementById('dtr1'),
         }
 
         checkString = (str) => {
             return (str === "" || str === " ");
         }
+        generateGraph(t,svr,'SVR');
+        generateGraph(t,rf,'RF');
+        generateGraph(t,dtr,'DTR');
 
+        changeGraphVal = (which,id)=>{
+            if(which === 1){
+                switch(id){
+                    case "RF":{
+                        object.rfStart+=100;
+                        object.rfEnd+=100;
+                        if (object.rfStart >= 100) object.rf0.disabled = false;
+                        if (object.rfEnd >= 2554) object.rf1.disabled = true;
+                        generateGraph(t,rf,id,object.rfStart,object.rfEnd)
+                        break
+                    }
+                    case "SVR":{
+                        object.svrStart+=100;
+                        object.svrEnd+=100;
+                        if (object.svrStart >= 100) object.svr0.disabled = false;
+                        if (object.svrEnd >= 2554) object.svr1.disabled = true;
+                        generateGraph(t,rf,id,object.svrStart,object.svrEnd)
+                        break
+                    }
+                    case "DTR":{
+                        object.dtrStart+=100;
+                        object.dtrEnd+=100;
+                        if (object.dtrStart >= 100) object.dtr0.disabled = false;
+                        if (object.dtrEnd >= 2554) object.dtr1.disabled = true;
+                        generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
+                        break
+                    }
+                }
+            }else{
+                switch(id){
+                    case "RF":{
+                        object.rfStart-=100;
+                        object.rfEnd-=100;
+                        if (object.rfStart === 0) object.rf0.disabled = false;
+                        if (object.rfEnd <= 2500) object.rf1.disabled = false;
+                        generateGraph(t,rf,id,object.rfStart,object.rfEnd)
+                        break
+                    }
+                    case "SVR":{
+                        object.svrStart-=100;
+                        object.svrEnd-=100;
+                        if (object.svrStart === 0) object.svr0.disabled = false;
+                        if (object.svrEnd <= 2500) object.svr1.disabled = false;
+                        generateGraph(t,rf,id,object.svrStart,object.svrEnd)
+                        break
+                    }
+                    case "DTR":{
+                        object.dtrStart-=100;
+                        object.dtrEnd-=100;
+                        if (object.dtrStart === 0) object.dtr0.disabled = false;
+                        if (object.dtrEnd <= 2500) object.dtr1.disabled = false;
+                        generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
+                        break
+                    }
+                }
+            }
+            
+        }
 
 
         object.Predict.submit((event) => {
             event.preventDefault();
-            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) ||  checkString(object.rainfall.value)) {
+            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) || checkString(object.rainfall.value) || checkString(object.rainfall.value)) {
                 var toast = new bootstrap.Toast(object.toast);
                 toast.show();
                 return;
             }
-            var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
-            bsOffcanvas.show();
+            var obj = { 'n': object.nitrogen.value, 'p': object.phosporus.value, 'k': object.pottasium.value, 'rain': object.rainfall.value }
+            console.log(obj);
+            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            $.ajax({
+                'url': '/predict',
+                'method': 'POST',
+                'data': obj,
+                'dataType': 'json',
+                'success': (d) => {
+                    var string = "The Yield will be " + d.val;
+                    object.predicted.html(string);
+                    var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
+                    bsOffcanvas.show();
+                }
+
+            })
+
+
+
         })
 
 
-        console.log(object.nitrogen.value);
 
 
         changeToDiv = (ind) => {
@@ -292,7 +488,6 @@
                     $("#1").addClass("active");
                     $("#3").removeClass("active");
                     $("#4").removeClass("active");
-                    console.log("eh");
                     break;
                 }
                 case 2: {
@@ -306,7 +501,7 @@
                     $("#4").removeClass("active");
                     break;
                 }
-                case 3 :{
+                case 3: {
                     $("#fill").css("display", "none");
                     $("#svr").css("display", "none");
                     $("#rf").css("display", "none");
@@ -331,16 +526,6 @@
             }
         }
     </script>
-
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
-        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
-        crossorigin="anonymous"></script>
-    <script src="{% static 'js/dashboard.js' %}"></script>
 </body>
 
 </html>

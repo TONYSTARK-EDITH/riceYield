@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+admin.site.register(Mlmodel)
+admin.site.register(svr)
+admin.site.register(DTR)
+admin.site.register(RF)
+admin.site.register(RealValue)

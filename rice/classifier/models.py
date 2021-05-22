@@ -1,16 +1,16 @@
 from django.db import models
 
-# Create your models here.
+# # Create your models here.
 class Mlmodel(models.Model):
     class Meta:
         verbose_name_plural="MlModel"
-    pottasium = models.FloatField()
-    phosphorus = models.FloatField()
     nitrogen = models.FloatField()
+    phosphorus = models.FloatField()
+    pottasium = models.FloatField()
     rainfall = models.FloatField()
     rice_yield = models.FloatField()
 
-class SVR(models.Model):
+class svr(models.Model):
     class Meta:
         verbose_name_plural = "SVR"
     predicted = models.FloatField()
@@ -23,3 +23,8 @@ class RF(models.Model):
     class Meta:
         verbose_name_plural = "RF"
     predicted = models.FloatField()
+
+class RealValue(models.Model):
+    class Meta:
+        verbose_name_plural = "RealValue"
+    realVal = models.FloatField()
