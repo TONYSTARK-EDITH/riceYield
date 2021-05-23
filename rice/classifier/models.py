@@ -1,6 +1,5 @@
 from django.db import models
 
-# # Create your models here.
 class Mlmodel(models.Model):
     class Meta:
         verbose_name_plural="MlModel"
@@ -22,6 +21,21 @@ class DTR(models.Model):
 class RF(models.Model):
     class Meta:
         verbose_name_plural = "RF"
+    predicted = models.FloatField()
+
+class mlr(models.Model):
+    class Meta:
+        verbose_name_plural = "mlr"
+    predicted = models.FloatField()
+
+class lasso(models.Model):
+    class Meta:
+        verbose_name_plural = "lasso"
+    predicted = models.FloatField()
+
+class ridge(models.Model):
+    class Meta:
+        verbose_name_plural = "ridge"
     predicted = models.FloatField()
 
 class RealValue(models.Model):

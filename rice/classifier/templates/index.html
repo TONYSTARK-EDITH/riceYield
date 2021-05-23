@@ -17,12 +17,18 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
     <style>
+        *{
+            text-rendering: optimizeLegibility;
+        }
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
             -webkit-user-select: none;
             -moz-user-select: none;
             user-select: none;
+        }
+        a{
+            cursor: pointer;
         }
 
         @media (min-width: 768px) {
@@ -54,27 +60,45 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" id="1" aria-current="page" href="#" onclick="changeToDiv(1);">
+                            <a class="nav-link active" id="1" aria-current="page" onclick="changeToDiv(1);">
                                 <span data-feather="home"></span>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="2" href="#" onclick="changeToDiv(2);">
+                            <a class="btn-link nav-link" id="2" onclick="changeToDiv(2);">
                                 <span data-feather="bar-chart-2"></span>
                                 SVR Model
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="3" href="#" onclick="changeToDiv(3)">
+                            <a  class="btn-link nav-link" id="3" onclick="changeToDiv(3)">
                                 <span data-feather="database"></span>
                                 Decision Tree
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="4" href="#" onclick="changeToDiv(4);">
+                            <a class="btn-link nav-link" id="4" onclick="changeToDiv(4);">
                                 <span data-feather="pie-chart"></span>
                                 Random Forest
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn-link nav-link" id="5" onclick="changeToDiv(5);">
+                                <span data-feather="bar-chart-2"></span>
+                                Multiple Linear Regression
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn-link nav-link" id="6" onclick="changeToDiv(6);">
+                                <span data-feather="database"></span>
+                                Ridge Linear Regression
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn-link nav-link" id="7" onclick="changeToDiv(7);">
+                                <span data-feather="pie-chart"></span>
+                                Lasso Linear Regression
                             </a>
                         </li>
                     </ul>
@@ -86,7 +110,7 @@
                             <span data-feather="plus-circle"></span>
                         </a>
                     </h6>
-                    <ul class="nav flex-column mb-2">
+                    <!-- <ul class="nav flex-column mb-2">
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 <span data-feather="file-text"></span>
@@ -111,7 +135,7 @@
                                 Year-end sale
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
                 </div>
             </nav>
 
@@ -121,47 +145,24 @@
                     <h1 class="h2">Yield Predict</h1>
                 </div>
                 <form class="form-floating" id="Predict">
-                    <div class="row g-2">
-                        <div class="form-floating col-sm-9">
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
                             <input type="number" class="form-control" id="Nitrogen" placeholder="Nitrogen" step="any">
-                            <label for="Nitrogen">Nitrogen (N)</label>
-                        </div>
-                        <div class="col-auto">
-                            <select class="form-select form-select-md mb-3"
-                                style="padding-top: 16px; padding-bottom: 16px;" id="N"
-                                aria-label=".form-select-lg example">
-                                <option value="1" selected>&nbsp;Kg/ha&nbsp;</option>
-                                <option value="2">&nbsp;g/ha&nbsp;</option>
-                            </select>
+                            <label for="Nitrogen">Nitrogen (mg/square feet)</label>
                         </div>
                     </div>
-                    <div class="row g-2">
-                        <div class="form-floating col-sm-9">
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
                             <input type="number" class="form-control" id="Phosphorus" placeholder="Phosphorus"
                                 step="any">
-                            <label for="Phosphorus">Phosphorus (P)</label>
-                        </div>
-                        <div class="col-auto">
-                            <select class="form-select form-select-md mb-3"
-                                style="padding-top: 16px; padding-bottom: 16px;" id="P"
-                                aria-label=".form-select-lg example">
-                                <option value="1" selected>&nbsp;Kg/ha&nbsp;</option>
-                                <option value="2">&nbsp;g/ha&nbsp;</option>
-                            </select>
+                            <label for="Phosphorus">Phosphorus (mg/square feet)</label>
                         </div>
                     </div>
 
-                    <div class="row g-2">
-                        <div class="form-floating col-sm-9">
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
                             <input type="number" class="form-control" id="Pottasium" placeholder="Pottasium" step="any">
-                            <label for="Pottasium">Pottasium (K)</label>
-                        </div>
-                        <div class="col-auto">
-                            <select class="form-select form-select-md mb-3" id="K"
-                                style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
-                                <option value="1" selected>&nbsp;Kg/ha&nbsp;</option>
-                                <option value="2">&nbsp;g/ha&nbsp;</option>
-                            </select>
+                            <label for="Pottasium">Pottasium (mg/square feet)</label>
                         </div>
                     </div>
 
@@ -177,8 +178,10 @@
                         <div class="col-auto">
                             <select class="form-select form-select-md mb-3" id="A"
                                 style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
-                                <option value="1" selected>&nbsp;ha&nbsp;</option>
-                                <option value="2">&nbsp;acre&nbsp;</option>
+                                <option value="ha" selected>&nbsp;ha&nbsp;</option>
+                                <option value="acre">&nbsp;acre&nbsp;</option>
+                                <option value="cent">&nbsp;cent&nbsp;</option>
+                                <option value="square feet">&nbsp;square feet&nbsp;</option>
                             </select>
                         </div>
                     </div>
@@ -213,11 +216,13 @@
                     <h1 class="h2">SVR Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
-                            <button type="button" id="svr0" class="btn btn-sm btn-outline-secondary" disabled onclick="changeGraphVal(0,'SVR')">
+                            <button type="button" id="svr0" class="btn btn-sm btn-outline-secondary" disabled
+                                onclick="changeGraphVal(0,'SVR')">
                                 <span data-feather="chevrons-left"></span>
                                 Prev
                             </button>
-                            <button type="button" id="svr1" class="btn btn-sm btn-outline-secondary" onclick="changeGraphVal(1,'SVR')">
+                            <button type="button" id="svr1" class="btn btn-sm btn-outline-secondary"
+                                onclick="changeGraphVal(1,'SVR')">
                                 <span data-feather="chevrons-right"></span>
                                 Next
                             </button>
@@ -238,11 +243,13 @@
                     <h1 class="h2">Decision Tree Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
-                            <button type="button " id="dtr0" class="btn btn-sm btn-outline-secondary"  disabled onclick="changeGraphVal(0,'DTR')">
+                            <button type="button " id="dtr0" class="btn btn-sm btn-outline-secondary" disabled
+                                onclick="changeGraphVal(0,'DTR')">
                                 <span data-feather="chevrons-left"></span>
                                 Prev
                             </button>
-                            <button type="button" id="dtr1" class="btn btn-sm btn-outline-secondary" onclick="changeGraphVal(1,'DTR')">
+                            <button type="button" id="dtr1" class="btn btn-sm btn-outline-secondary"
+                                onclick="changeGraphVal(1,'DTR')">
                                 <span data-feather="chevrons-right"></span>
                                 Next
                             </button>
@@ -263,11 +270,13 @@
                     <h1 class="h2">Random Forest Model</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
-                            <button type="button" id="rf0" class="btn btn-sm btn-outline-secondary" disabled onclick="changeGraphVal(0,'RF')">
+                            <button type="button" id="rf0" class="btn btn-sm btn-outline-secondary" disabled
+                                onclick="changeGraphVal(0,'RF')">
                                 <span data-feather="chevrons-left"></span>
                                 Prev
                             </button>
-                            <button type="button" id="rf1" class="btn btn-sm btn-outline-secondary" onclick="changeGraphVal(1,'RF')">
+                            <button type="button" id="rf1" class="btn btn-sm btn-outline-secondary"
+                                onclick="changeGraphVal(1,'RF')">
                                 <span data-feather="chevrons-right"></span>
                                 Next
                             </button>
@@ -282,6 +291,87 @@
 
                 <canvas class="my-4 w-100" id="RF" width="900" height="380"></canvas>
             </div>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="mlr">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Multiple Linear Regression Model</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" id="mlr0" class="btn btn-sm btn-outline-secondary" disabled
+                                onclick="changeGraphVal(0,'MLR')">
+                                <span data-feather="chevrons-left"></span>
+                                Prev
+                            </button>
+                            <button type="button" id="mlr1" class="btn btn-sm btn-outline-secondary"
+                                onclick="changeGraphVal(1,'MLR')">
+                                <span data-feather="chevrons-right"></span>
+                                Next
+                            </button>
+                        </div>
+                        <span id="num4" class="btn btn-sm">
+                            0
+                            <span data-feather="arrow-right"></span>
+                            100
+                        </span>
+                    </div>
+                </div>
+
+                <canvas class="my-4 w-100" id="MLR" width="900" height="380"></canvas>
+            </div>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="rid">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Ridge Linear Regression Model</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" id="rid0" class="btn btn-sm btn-outline-secondary" disabled
+                                onclick="changeGraphVal(0,'RID')">
+                                <span data-feather="chevrons-left"></span>
+                                Prev
+                            </button>
+                            <button type="button" id="rid1" class="btn btn-sm btn-outline-secondary"
+                                onclick="changeGraphVal(1,'RID')">
+                                <span data-feather="chevrons-right"></span>
+                                Next
+                            </button>
+                        </div>
+                        <span id="num5" class="btn btn-sm">
+                            0
+                            <span data-feather="arrow-right"></span>
+                            100
+                        </span>
+                    </div>
+                </div>
+
+                <canvas class="my-4 w-100" id="RID" width="900" height="380"></canvas>
+            </div>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="display: none;" id="las">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Lasso Linear Regression Model</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" id="las0" class="btn btn-sm btn-outline-secondary" disabled
+                                onclick="changeGraphVal(0,'LAS')">
+                                <span data-feather="chevrons-left"></span>
+                                Prev
+                            </button>
+                            <button type="button" id="las1" class="btn btn-sm btn-outline-secondary"
+                                onclick="changeGraphVal(1,'LAS')">
+                                <span data-feather="chevrons-right"></span>
+                                Next
+                            </button>
+                        </div>
+                        <span id="num6" class="btn btn-sm">
+                            0
+                            <span data-feather="arrow-right"></span>
+                            100
+                        </span>
+                    </div>
+                </div>
+
+                <canvas class="my-4 w-100" id="LAS" width="900" height="380"></canvas>
+            </div>
         </div>
         <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
             aria-labelledby="offcanvasWithBothOptionsLabel">
@@ -290,7 +380,7 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body" style="text-align: center;">
+            <div class="offcanvas-body" style="text-align: center; text-transform: capitalize; font-size: large;">
                 <p id="predictedValue">Try scrolling the rest of the page to see this option in action.</p>
             </div>
         </div>
@@ -309,7 +399,7 @@
 
     <script>
 
-        generateGraph = (t, dat, id,start=0,end=100) => {
+        generateGraph = (t, dat, id, start = 0, end = 100) => {
             feather.replace()
 
             var ctx = document.getElementById(id)
@@ -352,6 +442,9 @@
         var svr = "{{ svr }}".split(",");
         var rf = "{{ rf }}".split(",");
         var dtr = "{{ dtr }}".split(",");
+        var mlr = "{{ mlr }}".split(",");
+        var las = "{{ las }}".split(",");
+        var rid = "{{ rid }}".split(",");
 
 
 
@@ -365,116 +458,290 @@
             pred: document.getElementById('pred'),
             Predict: $("#Predict"),
             toast: document.getElementById("toast"),
+            area: document.getElementById('A'),
+            Area: document.getElementById('Area'),
             firstDiv: $("#fill"),
             secDiv: $("#svr"),
             predicted: $("#predictedValue"),
-            svrStart:0,
-            svrEnd:100,
-            rfStart:0,
-            rfEnd:100,
-            dtrStart:0,
-            dtrEnd:100,
-            svr0:document.getElementById('svr0'),
-            svr1:document.getElementById('svr1'),
-            rf0:document.getElementById('rf0'),
-            rf1:document.getElementById('rf1'),
-            dtr0:document.getElementById('dtr0'),
-            dtr1:document.getElementById('dtr1'),
-            svr:generateGraph(t,svr,'SVR'),
-            rf:generateGraph(t,rf,'RF'),
-            dtr:generateGraph(t,dtr,'DTR'),
-            
+            svrStart: 0,
+            svrEnd: 100,
+            rfStart: 0,
+            rfEnd: 100,
+            dtrStart: 0,
+            dtrEnd: 100,
+            mlrStart:0,
+            mlrEnd:100,
+            ridStart:0,
+            ridEnd:100,
+            lasStart:0,
+            lasEnd:100,
+            svr0: $('#svr0'),
+            svr1: $('#svr1'),
+            rf0: $('#rf0'),
+            rf1: $('#rf1'),
+            dtr0: $('#dtr0'),
+            dtr1: $('#dtr1'),
+            mlr0:$("#mlr0"),
+            mlr1:$("#mlr1"),
+            rid0:$("#rid0"),
+            rid1:$("#rid1"),
+            las0:$("#las0"),
+            las1:$("#las1"),
+            svr: generateGraph(t, svr, 'SVR'),
+            rf: generateGraph(t, rf, 'RF'),
+            dtr: generateGraph(t, dtr, 'DTR'),
+            mlr:generateGraph(t,mlr,'MLR'),
+            rid:generateGraph(t,rid,"RID"),
+            las:generateGraph(t,las,"LAS"),
+            svrNum: $("#num1"),
+            dtrNum: $("#num2"),
+            rfNum: $("#num3"),
+            mlrNum:$("#num4"),
+            ridNum:$("#num5"),
+            lasNum:$("#num6"),
         }
 
         checkString = (str) => {
             return (str === "" || str === " ");
         }
-        
-        
 
-        changeGraphVal = (which,id)=>{
-            if(which === 1){
-                switch(id){
-                    case "RF":{
-                        object.rfStart+=100;
-                        object.rfEnd+=100;
-                        object.rf.destroy();
-                        if (object.rfStart >= 100) object.rf0.disabled = false;
-                        if (object.rfEnd >= 2554) object.rf1.disabled = true;
-                        object.rf = generateGraph(t,rf,id,object.rfStart,object.rfEnd)
+        disableWhateverYouWant = () => {
+            if (object.rfStart >= 100) object.rf0.attr("disabled", false);
+            if (object.rfEnd >= 2554) object.rf1.attr("disabled", true);
+            if (object.svrStart >= 100) object.svr0.attr("disabled", false);
+            if (object.svrEnd >= 2554) object.svr1.attr("disabled", true);
+            if (object.dtrStart >= 100) object.dtr0.attr("disabled", false);
+            if (object.dtrEnd >= 2554) object.dtr1.attr("disabled", true);
+            if (object.mlrStart >= 100) object.mlr0.attr("disabled", false);
+            if (object.mlrEnd >= 2554) object.mlr1.attr("disabled", true);
+            if (object.ridStart >= 100) object.rid0.attr("disabled", false);
+            if (object.ridEnd >= 2554) object.rid1.attr("disabled", true);
+            if (object.lasStart >= 100) object.las0.attr("disabled", false);
+            if (object.lasEnd >= 2554) object.las1.attr("disabled", true);
+            if (object.rfStart <= 0) object.rf0.attr("disabled", true);
+            if (object.rfEnd <= 2500) object.rf1.attr("disabled", false);
+            if (object.svrStart <= 0) object.svr0.attr("disabled", true);
+            if (object.svrEnd <= 2500) object.svr1.attr("disabled", false);
+            if (object.dtrStart <= 0) object.dtr0.attr("disabled", true);
+            if (object.dtrEnd <= 2500) object.dtr1.attr("disabled", false);
+            if (object.mlrStart <= 0) object.mlr0.attr("disabled", true);
+            if (object.mlrEnd <= 2500) object.mlr1.attr("disabled", false);
+            if (object.ridStart <= 0) object.rid0.attr("disabled", true);
+            if (object.ridEnd <= 2500) object.rid1.attr("disabled", false);
+            if (object.lasStart <= 0) object.las0.attr("disabled", true);
+            if (object.lasEnd <= 2500) object.las1.attr("disabled", false);
+        }
+
+        changeGraphVal = (which, id) => {
+            if (which === 1) {
+                switch (id) {
+                    case "RF": {
+                        object.rfStart += 100;
+                        object.rfEnd += 100;
+                        object.rf.data.datasets[0].data = rf.slice(object.rfStart,object.rfEnd);
+                        object.rf.data.datasets[1].data = t.slice(object.rfStart,object.rfEnd);
+                        object.rf.update();
+                        object.rfNum.html(`
+                            ${object.rfStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.rfEnd}`
+                        )
                         break
                     }
-                    case "SVR":{
-                        object.svrStart+=100;
-                        object.svrEnd+=100;
-                        object.svr.destroy();
-                        if (object.svrStart >= 100) object.svr0.disabled = false;
-                        if (object.svrEnd >= 2554) object.svr1.disabled = true;
-                        object.svr = generateGraph(t,rf,id,object.svrStart,object.svrEnd)
+                    case "SVR": {
+                        object.svrStart += 100;
+                        object.svrEnd += 100;
+                        object.svr.data.datasets[0].data = svr.slice(object.svrStart,object.svrEnd);
+                        object.svr.data.datasets[1].data = t.slice(object.svrStart,object.svrEnd);
+                        object.svr.update();
+                        object.svrNum.html(`
+                            ${object.svrStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.svrEnd}`
+                        )
+                        break
+
+                    }
+                    case "DTR": {
+                        object.dtrStart += 100;
+                        object.dtrEnd += 100;
+                        object.dtr.data.datasets[0].data = dtr.slice(object.dtrStart,object.dtrEnd);
+                        object.dtr.data.datasets[1].data = t.slice(object.dtrStart,object.dtrEnd);
+                        object.dtr.update();
+                        object.dtrNum.html(`
+                            ${object.dtrStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.dtrEnd}`
+                        )
                         break
                     }
-                    case "DTR":{
-                        object.dtrStart+=100;
-                        object.dtrEnd+=100;
-                        object.dtr.destroy();
-                        if (object.dtrStart >= 100) object.dtr0.disabled = false;
-                        if (object.dtrEnd >= 2554) object.dtr1.disabled = true;
-                        object.dtr = generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
+                    case "MLR":{
+                        object.mlrStart+=100;
+                        object.mlrEnd+=100;
+                        object.mlr.data.datasets[0].data = mlr.slice(object.mlrStart,object.mlrEnd);
+                        object.mlr.data.datasets[1].data = t.slice(object.mlrStart,object.mlrEnd);
+                        object.mlr.update();
+                        object.mlrNum.html(`
+                            ${object.mlrStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.mlrEnd}`
+                        )
+                        break
+                    }
+                    case "RID":{
+                        object.ridStart+=100;
+                        object.ridEnd+=100;
+                        object.rid.data.datasets[0].data = rid.slice(object.ridStart,object.ridEnd);
+                        object.rid.data.datasets[1].data = t.slice(object.ridStart,object.ridEnd);
+                        object.rid.update();
+                        object.ridNum.html(`
+                            ${object.ridStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.ridEnd}`
+                        )
+                        break
+                    }
+                    case "LAS":{
+                        object.lasStart+=100;
+                        object.lasEnd+=100;
+                        object.las.data.datasets[0].data = las.slice(object.lasStart,object.lasEnd);
+                        object.las.data.datasets[1].data = t.slice(object.lasStart,object.lasEnd);
+                        object.las.update();
+                        object.lasNum.html(`
+                            ${object.lasStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.lasEnd}`
+                        )
                         break
                     }
                 }
-            }else{
-                switch(id){
-                    case "RF":{
-                        object.rfStart-=100;
-                        object.rfEnd-=100;
-                        object.rf.destroy();
-                        if (object.rfStart <= 0) object.rf0.disabled = false;
-                        if (object.rfEnd <= 2500) object.rf1.disabled = false;
-                        object.rf =  generateGraph(t,rf,id,object.rfStart,object.rfEnd)
+            } else {
+                switch (id) {
+                    case "RF": {
+                        object.rfStart -= 100;
+                        object.rfEnd -= 100;
+                        object.rf.data.datasets[0].data = rf.slice(object.rfStart,object.rfEnd);
+                        object.rf.data.datasets[1].data = t.slice(object.rfStart,object.rfEnd);
+                        object.rf.update();
+                        object.rfNum.html(`
+                            ${object.rfStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.rfEnd}`
+                        )
+
                         break
                     }
-                    case "SVR":{
-                        object.svrStart-=100;
-                        object.svrEnd-=100;
-                        object.svr.destroy()
-                        if (object.svrStart <= 0) object.svr0.disabled = false;
-                        if (object.svrEnd <= 2500) object.svr1.disabled = false;
-                        object.svr =  generateGraph(t,rf,id,object.svrStart,object.svrEnd)
+                    case "SVR": {
+                        object.svrStart -= 100;
+                        object.svrEnd -= 100;
+                        object.svr.data.datasets[0].data = svr.slice(object.svrStart,object.svrEnd);
+                        object.svr.data.datasets[1].data = t.slice(object.svrStart,object.svrEnd);
+                        object.svr.update();
+                        object.svrNum.html(`
+                            ${object.svrStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.svrEnd}`
+                        )
                         break
                     }
-                    case "DTR":{
-                        object.dtrStart-=100;
-                        object.dtrEnd-=100;
-                        object.dtr.destroy()
-                        if (object.dtrStart <= 0) object.dtr0.disabled = false;
-                        if (object.dtrEnd <= 2500) object.dtr1.disabled = false;
-                        object.dtr = generateGraph(t,rf,id,object.dtrStart,object.dtrEnd)
+                    case "DTR": {
+                        object.dtrStart -= 100;
+                        object.dtrEnd -= 100;
+                        object.dtr.data.datasets[0].data = dtr.slice(object.dtrStart,object.dtrEnd);
+                        object.dtr.data.datasets[1].data = t.slice(object.dtrStart,object.dtrEnd);
+                        object.dtr.update();
+                        object.dtrNum.html(`
+                            ${object.dtrStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.dtrEnd}`
+                        )
+                        break
+                    }
+                    case "MLR":{
+                        object.mlrStart-=100;
+                        object.mlrEnd-=100;
+                        object.mlr.data.datasets[0].data = mlr.slice(object.mlrStart,object.mlrEnd);
+                        object.mlr.data.datasets[1].data = t.slice(object.mlrStart,object.mlrEnd);
+                        object.mlr.update();
+                        object.mlrNum.html(`
+                            ${object.mlrStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.mlrEnd}`
+                        )
+                        break
+                    }
+                    case "RID":{
+                        object.ridStart-=100;
+                        object.ridEnd-=100;
+                        object.rid.data.datasets[0].data = rid.slice(object.ridStart,object.ridEnd);
+                        object.rid.data.datasets[1].data = t.slice(object.ridStart,object.ridEnd);
+                        object.rid.update();
+                        object.ridNum.html(`
+                            ${object.ridStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.ridEnd}`
+                        )
+                        break
+                    }
+                    case "LAS":{
+                        object.lasStart-=100;
+                        object.lasEnd-=100;
+                        object.las.data.datasets[0].data = las.slice(object.lasStart,object.lasEnd);
+                        object.las.data.datasets[1].data = t.slice(object.lasStart,object.lasEnd);
+                        object.las.update();
+                        object.lasNum.html(`
+                            ${object.lasStart}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            ${object.lasEnd}`
+                        )
                         break
                     }
                 }
             }
-            
+            disableWhateverYouWant();
+
+        }
+
+        convertMgPerSqFt = (va) => {
+            return (va * 107639) / 1000000
+        }
+
+        convertArea = (unit,area)=>{
+            if (unit === "acre"){
+                area/=2.471;
+            }
+            else if(unit === "cent"){
+                area/=247.1;
+            }
+            else if(unit === "square feet"){
+                area/=107639;
+            }
+            return area;
         }
 
 
         object.Predict.submit((event) => {
             event.preventDefault();
-            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) || checkString(object.rainfall.value) || checkString(object.rainfall.value)) {
+            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) || checkString(object.rainfall.value) || checkString(object.Area.value)) {
                 var toast = new bootstrap.Toast(object.toast);
                 toast.show();
                 return;
             }
-            var obj = { 'n': object.nitrogen.value, 'p': object.phosporus.value, 'k': object.pottasium.value, 'rain': object.rainfall.value }
-            console.log(obj);
+            var unit = object.area.value, area = object.Area.value;
+            area = convertArea(unit,area);
+            var obj = { 'n': parseFloat(object.nitrogen.value), 'p': parseFloat(object.phosporus.value), 'k': parseFloat(object.pottasium.value), 'rain': parseFloat(object.rainfall.value) }
+            obj['n'] = convertMgPerSqFt(obj['n'])*area;
+            obj['p'] = convertMgPerSqFt(obj['p'])*area;
+            obj['k'] = convertMgPerSqFt(obj['k'])*area;
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            console.log(obj);
             $.ajax({
                 'url': '/predict',
                 'method': 'POST',
                 'data': obj,
                 'dataType': 'json',
                 'success': (d) => {
-                    var string = "The Yield will be " + d.val;
+                    var string = `The total yield for ${area} ha ${d.val*area}`;
                     object.predicted.html(string);
                     var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
                     bsOffcanvas.show();
@@ -494,22 +761,34 @@
                 case 1: {
                     $("#fill").css("display", "block");
                     $("#svr").css("display", "none");
+                    $("#rid").css("display","none");
+                    $("#las").css("display","none");
                     $("#dtr").css("display", "none");
                     $("#rf").css("display", "none");
+                    $("#mlr").css("display","none");
                     $("#2").removeClass("active");
                     $("#1").addClass("active");
                     $("#3").removeClass("active");
+                    $("#7").removeClass("active");
+                    $("#5").removeClass("active");
+                    $("#6").removeClass("active");
                     $("#4").removeClass("active");
                     break;
                 }
                 case 2: {
                     $("#fill").css("display", "none");
                     $("#svr").css("display", "block");
+                    $("#rid").css("display","none");
                     $("#dtr").css("display", "none");
+                    $("#las").css("display","none");
                     $("#rf").css("display", "none");
+                    $("#mlr").css("display","none");
                     $("#1").removeClass("active");
                     $("#2").addClass("active");
                     $("#3").removeClass("active");
+                    $("#5").removeClass("active");
+                    $("#7").removeClass("active");
+                    $("#6").removeClass("active");
                     $("#4").removeClass("active");
                     break;
                 }
@@ -517,10 +796,16 @@
                     $("#fill").css("display", "none");
                     $("#svr").css("display", "none");
                     $("#rf").css("display", "none");
+                    $("#rid").css("display","none");
+                    $("#las").css("display","none");
                     $("#dtr").css("display", "block");
+                    $("#mlr").css("display","none");
                     $("#1").removeClass("active");
                     $("#3").addClass("active");
                     $("#2").removeClass("active");
+                    $("#7").removeClass("active");
+                    $("#5").removeClass("active");
+                    $("#6").removeClass("active");
                     $("#4").removeClass("active");
                     break;
                 }
@@ -528,11 +813,68 @@
                     $("#fill").css("display", "none");
                     $("#svr").css("display", "none");
                     $("#dtr").css("display", "none");
+                    $("#rid").css("display","none");
                     $("#rf").css("display", "block");
+                    $("#las").css("display","none");
+                    $("#mlr").css("display","none");
                     $("#1").removeClass("active");
                     $("#4").addClass("active");
                     $("#2").removeClass("active");
                     $("#3").removeClass("active");
+                    $("#7").removeClass("active");
+                    $("#6").removeClass("active");
+                    $("#5").removeClass("active");
+                    break;
+                }
+                case 5:{
+                    $("#fill").css("display", "none");
+                    $("#svr").css("display", "none");
+                    $("#dtr").css("display", "none");
+                    $("#rf").css("display", "none");
+                    $("#rid").css("display","none");
+                    $("#las").css("display","none");
+                    $("#mlr").css("display","block");
+                    $("#1").removeClass("active");
+                    $("#5").addClass("active");
+                    $("#2").removeClass("active");
+                    $("#7").removeClass("active");
+                    $("#3").removeClass("active");
+                    $("#4").removeClass("active");
+                    $("#6").removeClass("active");
+                    break;
+                }
+                case 6:{
+                    $("#fill").css("display", "none");
+                    $("#svr").css("display", "none");
+                    $("#dtr").css("display", "none");
+                    $("#rf").css("display", "none");
+                    $("#mlr").css("display", "none");
+                    $("#las").css("display","none");
+                    $("#rid").css("display","block");
+                    $("#1").removeClass("active");
+                    $("#6").addClass("active");
+                    $("#2").removeClass("active");
+                    $("#5").removeClass("active");
+                    $("#7").removeClass("active");
+                    $("#3").removeClass("active");
+                    $("#4").removeClass("active");
+                    break;
+                }
+                case 7:{
+                    $("#fill").css("display", "none");
+                    $("#svr").css("display", "none");
+                    $("#dtr").css("display", "none");
+                    $("#rf").css("display", "none");
+                    $("#mlr").css("display", "none");
+                    $("#rid").css("display", "none");
+                    $("#las").css("display","block");
+                    $("#1").removeClass("active");
+                    $("#6").removeClass("active");
+                    $("#7").addClass("active");
+                    $("#2").removeClass("active");
+                    $("#5").removeClass("active");
+                    $("#3").removeClass("active");
+                    $("#4").removeClass("active");
                     break;
                 }
             }
