@@ -14,7 +14,7 @@ import os.path as path
 import joblib
 sc = StandardScaler()
 scy = StandardScaler()
-dataset = pd.read_csv('C:\\Users\\Tony Stark\\Desktop\\Mini\\data.csv')
+dataset = pd.read_csv('data.csv')
 X = dataset.iloc[:, 1:-1].values
 y = dataset.iloc[:, -1].values
 y = y.reshape(-1, 1)
