@@ -196,8 +196,7 @@
                         aria-atomic="true">
                         <div class="toast-header">
                             <img src="{% static 'img/error.svg'  %}" class="rounded me-2" alt="...">
-                            <strong class="me-auto">Bootstrap</strong>
-                            <small class="text-muted">11 mins ago</small>
+                            <strong class="me-auto">Warning</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
                         <div class="toast-body">
@@ -741,7 +740,7 @@
                 'data': obj,
                 'dataType': 'json',
                 'success': (d) => {
-                    var string = `The total yield for ${area} ha ${d.val*area}`;
+                    var string = `The total yield for ${area} ha ${d.val*area} Kg`;
                     object.predicted.html(string);
                     var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
                     bsOffcanvas.show();
