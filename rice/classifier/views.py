@@ -1,3 +1,5 @@
+from math import log
+from django.contrib import auth
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
@@ -8,14 +10,14 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
-import matplotlib.pyplot as plt
 from .models import *
 import os.path as path
 import joblib
 import requests
-
-
-
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 """
 Initial val
 """
@@ -26,24 +28,27 @@ X = dataset.iloc[:, 1:-1].values
 y = dataset.iloc[:, -1].values
 y = y.reshape(-1, 1)
 X = sc.fit_transform(X)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=0)
 y_train = scy.fit_transform(y_train)
 
 
 '''
 predict -> n:float,p:float,k:float,rain:float
 '''
-def predict(n,p,k,rain):
+
+
+def predict(n, p, k, rain):
     model = joblib.load("model.pkl")
-    return scy.inverse_transform(model.predict(sc.transform([[n,p,k,rain]])))
+    return scy.inverse_transform(model.predict(sc.transform([[n, p, k, rain]])))
 
 
 def dataSets():
     model = {}
     st = []
-    for i in dataset.iloc[:,1:].values:
-        st.append(Mlmodel(nitrogen=i[0],phosphorus=i[1],pottasium=i[2],rainfall=i[3],rice_yield=i[4]))
-    Mlmodel.objects.bulk_create(st)
+    # for i in dataset.iloc[:,1:].values:
+    #     st.append(Mlmodel(nitrogen=i[0],phosphorus=i[1],pottasium=i[2],rainfall=i[3],rice_yield=i[4]))
+    # Mlmodel.objects.bulk_create(st)
     '''
     Support Vector Regression : -> kernel -> Radial Base Function
     '''
@@ -51,8 +56,8 @@ def dataSets():
     svr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(svr_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    st = [svr(predicted=i) for i in y_pred]
-    svr.objects.bulk_create(st)
+    # st = [svr(predicted=i) for i in y_pred]
+    # svr.objects.bulk_create(st)
     model[s] = model.get(s, []) + [svr_model]
     '''
     Random Forest Regression : Number of trees -> 100, randomState -> 0
@@ -61,8 +66,8 @@ def dataSets():
     rf_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(rf_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    st = [RF(predicted=i) for i in y_pred]
-    RF.objects.bulk_create(st)
+    # st = [RF(predicted=i) for i in y_pred]
+    # RF.objects.bulk_create(st)
     model[s] = model.get(s, []) + [rf_model]
     '''
     Decision Tree
@@ -71,8 +76,8 @@ def dataSets():
     dtr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(dtr_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    st = [DTR(predicted=i) for i in y_pred]
-    DTR.objects.bulk_create(st)
+    # st = [DTR(predicted=i) for i in y_pred]
+    # DTR.objects.bulk_create(st)
     model[s] = model.get(s, []) + [dtr_model]
     '''
     Multiple Linear Regression
@@ -80,8 +85,8 @@ def dataSets():
     lr_model = LinearRegression()
     lr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(lr_model.predict(X_test))
-    st = [mlr(predicted=i) for i in y_pred]
-    mlr.objects.bulk_create(st)
+    # st = [mlr(predicted=i) for i in y_pred]
+    # mlr.objects.bulk_create(st)
     score = r2_score(y_test, y_pred)
     model[score] = model.get(score, []) + [lr_model]
     ''' 
@@ -90,8 +95,8 @@ def dataSets():
     l = Ridge(alpha=0.2)
     l.fit(X_train, y_train)
     y_pred = scy.inverse_transform(l.predict(X_test))
-    st = [ridge(predicted=i) for i in y_pred]
-    ridge.objects.bulk_create(st)
+    # st = [ridge(predicted=i) for i in y_pred]
+    # ridge.objects.bulk_create(st)
     s = r2_score(y_test, y_pred)
     model[s] = model.get(s, []) + [l]
     '''
@@ -100,52 +105,83 @@ def dataSets():
     l = Lasso(alpha=0.2)
     l.fit(X_train, y_train)
     y_pred = scy.inverse_transform(l.predict(X_test))
-    st = [lasso(predicted=i) for i in y_pred]
-    lasso.objects.bulk_create(st)
+    # st = [lasso(predicted=i) for i in y_pred]
+    # lasso.objects.bulk_create(st)
     s = r2_score(y_test, y_pred)
     model[s] = model.get(s, []) + [l]
 
     model = dict(sorted(model.items(), key=lambda x: x[0], reverse=True))
-    st = [RealValue(realVal=i) for i in y_test]
-    RealValue.objects.bulk_create(st)
+    # st = [RealValue(realVal=i) for i in y_test]
+    # RealValue.objects.bulk_create(st)
     print(model)
     t = list(model.values())[0][0]
-    print(t)
     joblib.dump(t, 'model.pkl')
 
 
-def PutVals(Object,which = 1):
+'''
+PutVals -> Object : Django Model, which : realVal or predicted
+returns String
+'''
+
+
+def PutVals(Object, which=1):
     if which:
         List = [str(j.predicted) for j in Object.objects.all()]
     else:
         List = [str(j.realVal) for j in Object.objects.all()]
-    return List
+    return ",".join(List)
 
 
 # Create your views here.
 def home(request):
-    ip = requests.request("get",'https://www.cloudflare.com/cdn-cgi/trace')
-    ip = ip.text.split("\n")[2]
-    print(ip)
+    # Real Ip address of the current user using cloudfare
+    ip = requests.request("get", 'https://www.cloudflare.com/cdn-cgi/trace')
+    ip = ip.text.split("\n")[2].split("=")[1]
+    if not request.user.is_authenticated:
+        isPres = authenticate(username=ip, password="1")
+        if isPres is None:
+            user = User.objects.create_user(username=ip, password="1")
+            user.save()
+            isPres = authenticate(username=ip, password="1")
+        login(request, isPres)
     # If Model is not yet trained
     if not path.exists("model.pkl"):
         dataSets()
-    test = PutVals(RealValue,0)
+    test = PutVals(RealValue, 0)
     sv = PutVals(svr)
     dtr = PutVals(DTR)
     rf = PutVals(RF)
     Mlr = PutVals(mlr)
     rid = PutVals(ridge)
     las = PutVals(lasso)
-    test,sv,dtr,rf,las,Mlr,rid = ",".join(test),",".join(sv),",".join(dtr),",".join(rf),",".join(las),",".join(Mlr),",".join(rid)
+    reports = Report.objects.filter(user = ip).values_list('id',flat=True)
+    return render(request, 'index.html', {'test': test, 'svr': sv, 'dtr': dtr, 'rf': rf, 'las': las, 'mlr': Mlr, 'rid': rid,'reports':reports})
 
-    return render(request,'index.html',{'test':test,'svr':sv,'dtr':dtr,'rf':rf,'las':las,'mlr':Mlr,'rid':rid })
 
-
+@ensure_csrf_cookie
+@login_required
 def Predict(request):
     if request.is_ajax():
-        n,p,k,rain = float(request.POST.get('n')),float(request.POST.get('p')),float(request.POST.get('k')),float(request.POST.get('rain'))
+        n, p, k, rain = float(request.POST.get('n')), float(request.POST.get(
+            'p')), float(request.POST.get('k')), float(request.POST.get('rain'))
         val = predict(n, p, k, rain)[0]
-        return JsonResponse({'val':val})
+        return JsonResponse({'val': val})
     else:
-        raise Http404
+        return render(request, "Error.html")
+
+
+@ensure_csrf_cookie
+@login_required
+def saveReports(request):
+    if request.is_ajax():
+        n, p, k, rain, area, pred = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get('k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred'))
+        try:
+            Report.objects.bulk_create(
+                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user,n=n, p=p, k=k, rain=rain, area=area, pred=pred)])
+            t = Report.objects.latest('id')
+            print(t)
+            return JsonResponse({'name': str(t.id)})
+        except:
+            return JsonResponse({'name': -1})
+    else:
+        return render(request, "Error.html")

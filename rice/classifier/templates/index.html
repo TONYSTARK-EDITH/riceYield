@@ -20,6 +20,7 @@
         * {
             text-rendering: optimizeLegibility;
         }
+
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -38,7 +39,8 @@
             user-select: none;
         }
 
-        span,a {
+        span,
+        a {
             cursor: pointer;
         }
 
@@ -121,31 +123,17 @@
                             <span data-feather="plus-circle"></span>
                         </a>
                     </h6>
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                Current month
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                Last quarter
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                Social engagement
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                Year-end sale
-                            </a>
-                        </li>
+                    <ul id="reports" class="nav flex-column mb-2">
+
+                        {% for report in reports %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <span data-feather="file-text"></span>
+                                    Report {{ report }}
+                                </a>
+                            </li> 
+                        {% endfor %}
+                        
                     </ul>
                 </div>
             </nav>
@@ -197,9 +185,10 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-outline-primary" type="submit" data-bs-target="#offcanvasWithBothOptions" id="pred"
-                        aria-controls="offcanvasWithBothOptions">Predict</button>
-                    <button class="btn btn-outline-danger" type="button" id="clear" onclick="clearTheForm();" >Clear</button>
+                    <button class="btn btn-outline-primary" type="submit" data-bs-target="#offcanvasWithBothOptions"
+                        id="pred" aria-controls="offcanvasWithBothOptions">Predict</button>
+                    <button class="btn btn-outline-danger" type="button" id="clear"
+                        onclick="clearTheForm();">Clear</button>
 
                 </form>
                 <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0"
@@ -211,7 +200,7 @@
                             <strong class="me-auto">Warning</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
-                        <div class="toast-body">
+                        <div id="ToastBody" class="toast-body">
                             Please fill all the fields.
                         </div>
                     </div>
@@ -391,8 +380,13 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body" style="text-align: center; text-transform: capitalize; font-size: large;">
-                <p id="predictedValue">Try scrolling the rest of the page to see this option in action.</p>
+            <div class="offcanvas-body"
+                style="text-align: center; text-transform: capitalize; font-size: large; overflow: hidden;">
+                <p id="predictedValue" style="overflow: hidden;">Try scrolling the rest of the page to see this option
+                    in action.</p>
+            </div>
+            <div class="offcanvas-foot" style="text-align: right; margin:25px;">
+                <button class="btn btn-outline-success" onclick="saveReport();">Save Report</button>
             </div>
         </div>
 
@@ -510,6 +504,9 @@
             mlrNum: $("#num4"),
             ridNum: $("#num5"),
             lasNum: $("#num6"),
+            predictedValue: 0,
+            reportS: document.getElementById('reports'),
+            toastBody: $("#ToastBody"),
         }
 
         checkString = (str) => {
@@ -543,7 +540,7 @@
             if (object.lasEnd <= 2500) object.las1.attr("disabled", false);
         }
 
-        clearTheForm = ()=>{
+        clearTheForm = () => {
             object.Predict.trigger("reset");
         }
 
@@ -757,6 +754,7 @@
                 'data': obj,
                 'dataType': 'json',
                 'success': (d) => {
+                    object.predictedValue = d.val * area;
                     var string = `The total yield for ${area} ha ${d.val * area} Kg`;
                     object.predicted.html(string);
                     var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
@@ -768,6 +766,36 @@
 
 
         })
+        saveReport = () => {
+            var obj = { 'n': parseFloat(object.nitrogen.value), 'p': parseFloat(object.phosporus.value), 'k': parseFloat(object.pottasium.value), 'rain': parseFloat(object.rainfall.value), 'area': parseFloat(object.Area.value), 'pred': parseFloat(object.predictedValue) }
+            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            console.log(obj);
+            $.ajax({
+                'url': '/save',
+                'method': 'POST',
+                'data': obj,
+                'dataType': 'json',
+                'success': (d) => {
+                    if (d.name != '-1') {
+                        var li = document.createElement('li');
+                        li.className = "nav-item";
+                        li.innerHTML = `
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            Report ${d.name}
+                        </a>`;
+                        object.reportS.appendChild(li);
+                    }
+                    else{
+                        object.toastBody.html("Report Already Saved");
+                        var toast = new bootstrap.Toast(object.toast);
+                        toast.show();
+                        object.toastBody.html("Please fill all the fields");
+                    }
+                }
+
+            })
+        }
 
 
 
