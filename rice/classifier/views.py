@@ -12,6 +12,9 @@ import matplotlib.pyplot as plt
 from .models import *
 import os.path as path
 import joblib
+import requests
+
+
 
 """
 Initial val
@@ -118,8 +121,12 @@ def PutVals(Object,which = 1):
         List = [str(j.realVal) for j in Object.objects.all()]
     return List
 
+
 # Create your views here.
 def home(request):
+    ip = requests.request("get",'https://www.cloudflare.com/cdn-cgi/trace')
+    ip = ip.text.split("\n")[2]
+    print(ip)
     # If Model is not yet trained
     if not path.exists("model.pkl"):
         dataSets()
