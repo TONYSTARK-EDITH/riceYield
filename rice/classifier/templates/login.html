@@ -1,0 +1,400 @@
+{% load static %}
+
+<html>
+
+<head>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Mukta');
+
+        body {
+            background-color: #242424;
+            font-family: 'Mukta', sans-serif;
+            height: 100vh;
+            min-height: 550px;
+            position: relative;
+            overflow-y: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: #444444;
+        }
+
+        .login-reg-panel {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            width: 70%;
+            right: 0;
+            left: 0;
+            margin: auto;
+            min-height: 400px;
+            background-color: rgba(236, 48, 20, 0.9);
+        }
+
+        .white-panel {
+            background-color: rgba(255, 255, 255, 1);
+            height: 500px;
+            position: absolute;
+            top: -50px;
+            width: 50%;
+            right: calc(50% - 50px);
+            transition: .3s ease-in-out;
+            z-index: 0;
+            box-shadow: 0 0 15px 9px #00000096;
+        }
+
+        .login-reg-panel input[type="radio"] {
+            position: relative;
+            display: none;
+        }
+
+        .login-reg-panel {
+            color: #B8B8B8;
+        }
+
+        .login-reg-panel #label-login,
+        .login-reg-panel #label-register {
+            border: 1px solid #9E9E9E;
+            padding: 5px 5px;
+            width: 150px;
+            display: block;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .login-info-box {
+            width: 30%;
+            padding: 0 50px;
+            top: 20%;
+            left: 0;
+            position: absolute;
+            text-align: left;
+        }
+
+        .register-info-box {
+            width: 30%;
+            padding: 0 50px;
+            top: 20%;
+            right: 0;
+            position: absolute;
+            text-align: left;
+
+        }
+
+        .right-log {
+            right: 50px !important;
+        }
+
+        .login-show,
+        .register-show {
+            z-index: 1;
+            display: none;
+            opacity: 0;
+            transition: 0.3s ease-in-out;
+            color: #242424;
+            text-align: left;
+            padding: 50px;
+        }
+
+        .show-log-panel {
+            display: block;
+            opacity: 0.9;
+        }
+
+        .login-show input[type="email"],
+        .login-show input[type="password"] {
+            width: 100%;
+            display: block;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #b5b5b5;
+            outline: none;
+        }
+
+        .login-show input[type="submit"] {
+            max-width: 150px;
+            width: 100%;
+            background: #444444;
+            color: #f9f9f9;
+            border: none;
+            padding: 10px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            float: right;
+            cursor: pointer;
+        }
+
+        .login-show a {
+            display: inline-block;
+            padding: 10px 0;
+        }
+
+        .register-show input[type="email"],
+        .register-show input[type="password"] {
+            width: 100%;
+            display: block;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #b5b5b5;
+            outline: none;
+        }
+
+        .register-show input[type="submit"] {
+            max-width: 150px;
+            width: 100%;
+            background: #444444;
+            color: #f9f9f9;
+            border: none;
+            padding: 10px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            float: right;
+            cursor: pointer;
+        }
+
+        .credit {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #3B3B25;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 99;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2c7715;
+        }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            transition: background-color 5000s ease-in-out 0s;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="login-reg-panel">
+        <div class="login-info-box">
+            <h2>Have an account?</h2>
+            <label id="label-register" for="log-reg-show">Login</label>
+            <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
+        </div>
+
+        <div class="register-info-box">
+            <h2>Don't have an account?</h2>
+            <label id="label-login" for="log-login-show">Register</label>
+            <input type="radio" name="active-log-panel" id="log-login-show">
+        </div>
+
+        <div class="white-panel">
+            <div class="login-show">
+                <h2>LOGIN</h2>
+                <form class="form-floating needs-validation" novalidate id="login">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="Lemail" placeholder="Email" required>
+                        <label for="Email">Email</label>
+                        <div class="invalid-feedback" id="ifbe">Enter a valid email</div>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="Lpwd" placeholder="Password" required>
+                        <label for="password">Password</label>
+                        <div class="invalid-feedback" id="ifbp">Please enter password</div>
+                    </div>
+
+                    <input type="submit" value="Login">
+                    <a href="">Forgot password?</a>
+                </form>
+
+
+            </div>
+            <div class="register-show" id="rShow">
+                <h2>REGISTER</h2>
+                <form class="form-floating  needs-validation" novalidate id="register">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="Remail" placeholder="Email" required>
+                        <label for="Email">Email</label>
+                        <div class="invalid-feedback">Enter a valid email</div>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="Rpwd" placeholder="Password" required>
+                        <label for="password">Password</label>
+                        <div class="invalid-feedback">Please Enter the password</div>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="RCpwd" placeholder="Confirm Password"
+                            oninput="check(this);" required>
+                        <label for="password">Confirm Password</label>
+                        <div class="invalid-feedback">Password Doesn't match</div>
+                        <div class="valid-feedback">Password Matched</div>
+                    </div>
+                    <input type="submit" value="Register">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        $('.login-info-box').fadeOut();
+        $('.login-show').addClass('show-log-panel');
+    });
+
+
+    $('.login-reg-panel input[type="radio"]').on('change', function () {
+        if ($('#log-login-show').is(':checked')) {
+            $('.register-info-box').fadeOut();
+            $('.login-info-box').fadeIn();
+
+            $('.white-panel').addClass('right-log');
+            $('.register-show').addClass('show-log-panel');
+            $('.login-show').removeClass('show-log-panel');
+
+        }
+        else if ($('#log-reg-show').is(':checked')) {
+            $('.register-info-box').fadeIn();
+            $('.login-info-box').fadeOut();
+
+            $('.white-panel').removeClass('right-log');
+
+            $('.login-show').addClass('show-log-panel');
+            $('.register-show').removeClass('show-log-panel');
+        }
+    });
+
+    customValidate = () => {
+        var ele = document.getElementById("RCpwd").classList;
+        for (var i = 0; i < ele.length; i++) {
+            console.log(ele[i]);
+            if (ele[i] === "is-invalid") return false;
+        }
+        return true;
+    }
+
+
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        $("#ifbe").html("Enter a valid email");
+                        $("#ifbp").html("Enter password");
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    else {
+                        event.preventDefault();
+                        if (form.id == "register") {
+                            if (!customValidate()) {
+                                event.stopPropagation();
+                                form.classList.remove("was-validated");
+                                return;
+                            };
+                            var obj = { 'uname': $("#Remail").val(), 'pwd': $("#Rpwd").val() }
+                            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+                            $.ajax({
+                                'url': '/register',
+                                'method': 'POST',
+                                'data': obj,
+                                'dataType': 'json',
+                                'success': (d) => {
+                                    if (d.response == "1") {
+                                        var ele = document.getElementById('register');
+                                        var div = document.createElement('div');
+                                        div.className = "alert alert-success alert-dismissible fade show";
+                                        div.setAttribute("role","alert");
+                                        div.innerHTML = `
+                                            <strong>Registered</strong> Successfully
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        `;
+                                        ele.appendChild(div);
+                                    }
+                                    else{
+                                        var ele = document.getElementById('register');
+                                        var div = document.createElement('div');
+                                        div.className = "alert alert-warning alert-dismissible fade show";
+                                        div.setAttribute("role","alert");
+                                        div.innerHTML = `
+                                            User with the email <strong>${obj.uname}</strong> is present. Please login!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        `;
+                                        ele.appendChild(div);
+                                    }
+                                }
+
+                            })
+
+                        }else{
+                            $("#Lemail").removeClass("is-invalid");
+                            $("#Lpwd").removeClass("is-invalid");
+                            var obj = { 'uname': $("#Lemail").val(), 'pwd': $("#Lpwd").val() }
+                            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+                            $.ajax({
+                                'url': '/signin',
+                                'method': 'POST',
+                                'data': obj,
+                                'dataType': 'json',
+                                'success': (d) => {
+                                    console.log(d.response);
+                                    if (d.response == "-1") {
+                                        $("#login").removeClass("was-validated");
+                                        $("#Lemail").addClass("is-invalid");
+                                        $("#ifbe").html("Email is not registered");
+                                    }
+                                    else if(d.response == "-2"){
+                                        $("#login").removeClass("was-validated");
+                                        $("#Lpwd").addClass("is-invalid");
+                                        $("#ifbp").html("Password is incorrect");
+                                    }
+                                    else{
+                                        document.location.href = "/home";
+                                    }
+                                }
+
+                            })
+                        }
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })();
+
+    check = (which) => {
+        if (which.value == $("#Rpwd").val()) {
+            which.classList.add("is-valid");
+            which.classList.remove("is-invalid");
+        }
+        else {
+            which.classList.remove("is-valid");
+            which.classList.add("is-invalid");
+        }
+    }
+
+
+</script>
+
+</html>

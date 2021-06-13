@@ -1,6 +1,6 @@
 from math import log
 from django.contrib import auth
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse, Http404
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.preprocessing import StandardScaler
@@ -32,10 +32,54 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=0)
 y_train = scy.fit_transform(y_train)
 
-
 '''
 predict -> n:float,p:float,k:float,rain:float
 '''
+
+def welcome(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+
+    return render(request,'login.html')
+
+@ensure_csrf_cookie
+def signup(request):
+    if request.is_ajax():
+        username = request.POST.get('uname')
+        pwd = request.POST.get('pwd')
+        if not User.objects.filter(username = username).exists():
+            usr = User.objects.create_user(username = username, password = pwd)
+            usr.save()
+            return JsonResponse({'response':1})
+        else:
+            return JsonResponse({'response':-1})
+    else:
+        return render(request, 'Error.html')
+
+@ensure_csrf_cookie
+def signin(request):
+    if request.is_ajax():
+        username = request.POST.get('uname')
+        pwd = request.POST.get('pwd')
+        usr = authenticate(username=username,password = pwd)
+        if usr is None:
+            if not User.objects.filter(username = username).exists():
+                return JsonResponse({'response':-1})
+            else:
+                return JsonResponse({'response':-2})
+        login(request,usr)
+        return JsonResponse({'response':1})
+    else:
+        return render(request, 'Error.html')
+
+@login_required
+@ensure_csrf_cookie
+def signout(request):
+    if request.is_ajax():
+        logout(request)
+        return JsonResponse({'response':1})
+    else:
+        return render(request, "Error.html")
 
 
 def predict(n, p, k, rain):
@@ -132,18 +176,8 @@ def PutVals(Object, which=1):
     return ",".join(List)
 
 
-# Create your views here.
+@login_required
 def home(request):
-    # Real Ip address of the current user using cloudfare
-    ip = requests.request("get", 'https://www.cloudflare.com/cdn-cgi/trace')
-    ip = ip.text.split("\n")[2].split("=")[1]
-    if not request.user.is_authenticated:
-        isPres = authenticate(username=ip, password="1")
-        if isPres is None:
-            user = User.objects.create_user(username=ip, password="1")
-            user.save()
-            isPres = authenticate(username=ip, password="1")
-        login(request, isPres)
     # If Model is not yet trained
     if not path.exists("model.pkl"):
         dataSets()
@@ -154,12 +188,11 @@ def home(request):
     Mlr = PutVals(mlr)
     rid = PutVals(ridge)
     las = PutVals(lasso)
-    reports = Report.objects.filter(user = ip).values_list('id',flat=True)
+    reports = Report.objects.filter(user=request.user).values_list('id', flat=True)
     return render(request, 'index.html', {'test': test, 'svr': sv, 'dtr': dtr, 'rf': rf, 'las': las, 'mlr': Mlr, 'rid': rid,'reports':reports})
 
-
-@ensure_csrf_cookie
 @login_required
+@ensure_csrf_cookie
 def Predict(request):
     if request.is_ajax():
         n, p, k, rain = float(request.POST.get('n')), float(request.POST.get(
@@ -174,12 +207,12 @@ def Predict(request):
 @login_required
 def saveReports(request):
     if request.is_ajax():
-        n, p, k, rain, area, pred = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get('k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred'))
+        n, p, k, rain, area, pred = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get(
+            'k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred'))
         try:
             Report.objects.bulk_create(
-                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user,n=n, p=p, k=k, rain=rain, area=area, pred=pred)])
+                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user, n=n, p=p, k=k, rain=rain, area=area, pred=pred)])
             t = Report.objects.latest('id')
-            print(t)
             return JsonResponse({'name': str(t.id)})
         except:
             return JsonResponse({'name': -1})
