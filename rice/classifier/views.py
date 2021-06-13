@@ -188,7 +188,7 @@ def home(request):
     Mlr = PutVals(mlr)
     rid = PutVals(ridge)
     las = PutVals(lasso)
-    reports = Report.objects.filter(user=request.user).values_list('id', flat=True)
+    reports = Report.objects.filter(user=request.user).values_list('id','n','p','k','rain','area','pred')
     return render(request, 'index.html', {'test': test, 'svr': sv, 'dtr': dtr, 'rf': rf, 'las': las, 'mlr': Mlr, 'rid': rid,'reports':reports})
 
 @login_required
@@ -213,7 +213,7 @@ def saveReports(request):
             Report.objects.bulk_create(
                 [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user, n=n, p=p, k=k, rain=rain, area=area, pred=pred)])
             t = Report.objects.latest('id')
-            return JsonResponse({'name': str(t.id)})
+            return JsonResponse({'name': str(t.id),'n':n,'p':p,'k':k,'rain':rain,'area':area,'pred':pred})
         except:
             return JsonResponse({'name': -1})
     else:

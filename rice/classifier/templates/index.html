@@ -128,9 +128,13 @@
 
                         {% for report in reports %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a style="float: left;" id="report{{ report.0 }}" class="nav-link ReportList" href="#"
+                                onclick="showReport(this);">
                                 <span data-feather="file-text"></span>
-                                Report {{ report }}
+                                Report {{ report.0 }}
+                                <span style="display: none;" data-n="{{ report.1 }}" data-p="{{ report.2 }}"
+                                    data-k="{{ report.3 }}" data-rain="{{ report.4 }}" data-area="{{ report.5 }}"
+                                    data-pred="{{ report.6 }}"></span>
                             </a>
                         </li>
                         {% endfor %}
@@ -373,6 +377,58 @@
 
                 <canvas class="my-4 w-100" id="LAS" width="900" height="380"></canvas>
             </div>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="Report" style="display: none;">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Report </h1>
+                </div>
+                <form class="form-floating">
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" class="form-control" id="n" placeholder="Nitrogen" step="any" readonly>
+                            <label for="Nitrogen">Nitrogen (mg/square feet)</label>
+                        </div>
+                    </div>
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" class="form-control" id="p" placeholder="Phosphorus" step="any"
+                                readonly>
+                            <label for="Phosphorus">Phosphorus (mg/square feet)</label>
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" class="form-control" id="k" placeholder="Pottasium" step="any"
+                                readonly>
+                            <label for="Pottasium">Pottasium (mg/square feet)</label>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" id="r" placeholder="Rainfall" step="any" readonly>
+                        <label for="Rainfall">Avg. Rainfall</label>
+                    </div>
+
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" class="form-control" id="a" placeholder="Area" step="any" readonly>
+                            <label for="Area">Area</label>
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" class="form-control" id="Pred" placeholder="Predicted Yield" step="any"
+                                readonly>
+                            <label for="Area">Predicted Yield</label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-outline-danger" type="button" id="delete"
+                        onclick="clearTheForm();">Delete</button>
+
+                </form>
+            </div>
         </div>
         <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
             aria-labelledby="offcanvasWithBothOptionsLabel">
@@ -508,6 +564,13 @@
             predictedValue: 0,
             reportS: document.getElementById('reports'),
             toastBody: $("#ToastBody"),
+            reportDiv: $("#Report"),
+            reportN: $("#n"),
+            reportP: $("#p"),
+            reportK: $("#k"),
+            reportRain: $("#r"),
+            reportArea: $("#a"),
+            reportPred: $("#Pred"),
         }
 
         checkString = (str) => {
@@ -781,9 +844,13 @@
                         var li = document.createElement('li');
                         li.className = "nav-item";
                         li.innerHTML = `
-                        <a class="nav-link" href="#">
+                        <a style="float: left;" id="report${d.name}" class="nav-link ReportList" href="#"
+                                onclick="showReport(this);">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                             Report ${d.name}
+                            <span style="display: none;" data-n=${d.n} data-p=${d.p}
+                                data-k=${d.k} data-rain=${d.rain} data-area=${d.area}
+                                data-pred=${d.pred}></span>
                         </a>`;
                         object.reportS.appendChild(li);
                     }
@@ -798,8 +865,39 @@
             })
         }
 
+        removeReportActiveClass = () => {
+            document.querySelectorAll(".ReportList").forEach((ele) => {
+                ele.classList.remove("active");
+            })
+        }
 
 
+        showReport = (id) => {
+            var dataEle = $(id.children[1])
+            object.reportN.val(dataEle.data("n"));
+            object.reportP.val(dataEle.data("p"));
+            object.reportK.val(dataEle.data("k"));
+            object.reportRain.val(dataEle.data("rain"));
+            object.reportArea.val(dataEle.data("area"));
+            object.reportPred.val(dataEle.data("pred"));
+            object.reportDiv.css("display", "block");
+            removeReportActiveClass();
+            $("#fill").css("display", "none");
+            $("#svr").css("display", "none");
+            $("#rid").css("display", "none");
+            $("#dtr").css("display", "none");
+            $("#las").css("display", "none");
+            $("#rf").css("display", "none");
+            $("#mlr").css("display", "none");
+            $("#1").removeClass("active");
+            $("#2").removeClass("active");
+            $("#3").removeClass("active");
+            $("#5").removeClass("active");
+            $("#7").removeClass("active");
+            $("#6").removeClass("active");
+            $("#4").removeClass("active");
+            $(id)[0].classList.add("active");
+        }
 
         changeToDiv = (ind) => {
             switch (ind) {
@@ -818,6 +916,8 @@
                     $("#5").removeClass("active");
                     $("#6").removeClass("active");
                     $("#4").removeClass("active");
+                    object.reportDiv.css("display", "none");
+                    removeReportActiveClass();
                     break;
                 }
                 case 2: {
@@ -833,8 +933,10 @@
                     $("#3").removeClass("active");
                     $("#5").removeClass("active");
                     $("#7").removeClass("active");
+                    object.reportDiv.css("display", "none");
                     $("#6").removeClass("active");
                     $("#4").removeClass("active");
+                    removeReportActiveClass();
                     break;
                 }
                 case 3: {
@@ -843,6 +945,8 @@
                     $("#rf").css("display", "none");
                     $("#rid").css("display", "none");
                     $("#las").css("display", "none");
+                    removeReportActiveClass();
+                    object.reportDiv.css("display", "none");
                     $("#dtr").css("display", "block");
                     $("#mlr").css("display", "none");
                     $("#1").removeClass("active");
@@ -857,10 +961,12 @@
                 case 4: {
                     $("#fill").css("display", "none");
                     $("#svr").css("display", "none");
+                    object.reportDiv.css("display", "none");
                     $("#dtr").css("display", "none");
                     $("#rid").css("display", "none");
                     $("#rf").css("display", "block");
                     $("#las").css("display", "none");
+                    removeReportActiveClass();
                     $("#mlr").css("display", "none");
                     $("#1").removeClass("active");
                     $("#4").addClass("active");
@@ -878,7 +984,9 @@
                     $("#rf").css("display", "none");
                     $("#rid").css("display", "none");
                     $("#las").css("display", "none");
+                    removeReportActiveClass();
                     $("#mlr").css("display", "block");
+                    object.reportDiv.css("display", "none");
                     $("#1").removeClass("active");
                     $("#5").addClass("active");
                     $("#2").removeClass("active");
@@ -892,8 +1000,10 @@
                     $("#fill").css("display", "none");
                     $("#svr").css("display", "none");
                     $("#dtr").css("display", "none");
+                    removeReportActiveClass();
                     $("#rf").css("display", "none");
                     $("#mlr").css("display", "none");
+                    object.reportDiv.css("display", "none");
                     $("#las").css("display", "none");
                     $("#rid").css("display", "block");
                     $("#1").removeClass("active");
@@ -910,7 +1020,9 @@
                     $("#svr").css("display", "none");
                     $("#dtr").css("display", "none");
                     $("#rf").css("display", "none");
+                    object.reportDiv.css("display", "none");
                     $("#mlr").css("display", "none");
+                    removeReportActiveClass();
                     $("#rid").css("display", "none");
                     $("#las").css("display", "block");
                     $("#1").removeClass("active");
@@ -931,11 +1043,10 @@
                         'data': obj,
                         'dataType': 'json',
                         'success': (d) => {
-                            if (d.response == "1"){
+                            if (d.response == "1") {
                                 document.location.href = "/";
                             }
                         }
-
                     })
                     break;
                 }
