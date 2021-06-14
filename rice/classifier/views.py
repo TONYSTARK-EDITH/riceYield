@@ -82,6 +82,16 @@ def signout(request):
         return render(request, "Error.html")
 
 
+@login_required
+@ensure_csrf_cookie
+def delete(request):
+    if request.is_ajax():
+        id = request.POST.get('id')
+        Report.objects.get(id = id).delete()
+        return JsonResponse({'response':1})
+    else:
+        return render(request,'Error.html')
+
 def predict(n, p, k, rain):
     model = joblib.load("model.pkl")
     return scy.inverse_transform(model.predict(sc.transform([[n, p, k, rain]])))

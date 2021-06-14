@@ -64,7 +64,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="top: 0!important;">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -143,6 +143,27 @@
                 </div>
             </nav>
 
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <img src="{% static 'img/error.svg'  %}" />
+                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Do you want to delete the report ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-outline-success" onclick="deleteReport();"
+                                data-bs-dismiss="modal">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="fill">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -200,7 +221,7 @@
                     style="z-index: 5">
                     <div id="toast" class="toast hide" role="alert" data-bs-autohide="false" aria-live="assertive"
                         aria-atomic="true">
-                        <div class="toast-header">
+                        <div id="toast-header" class="toast-header">
                             <img src="{% static 'img/error.svg'  %}" class="rounded me-2" alt="...">
                             <strong class="me-auto">Warning</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -380,7 +401,7 @@
             <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="Report" style="display: none;">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Report </h1>
+                    <h1 class="h2" id="h2">Report </h1>
                 </div>
                 <form class="form-floating">
                     <div class="row g-1 mb-3">
@@ -424,8 +445,8 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-outline-danger" type="button" id="delete"
-                        onclick="clearTheForm();">Delete</button>
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                        type="button" id="delete">Delete</button>
 
                 </form>
             </div>
@@ -571,6 +592,8 @@
             reportRain: $("#r"),
             reportArea: $("#a"),
             reportPred: $("#Pred"),
+            reportH2: $("#h2"),
+            toastHeader: $("#toast-header"),
         }
 
         checkString = (str) => {
@@ -800,6 +823,7 @@
         object.Predict.submit((event) => {
             event.preventDefault();
             if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) || checkString(object.rainfall.value) || checkString(object.Area.value)) {
+                object.toastBody.html("Please fill all the fields");
                 var toast = new bootstrap.Toast(object.toast);
                 toast.show();
                 return;
@@ -811,7 +835,6 @@
             obj['p'] = convertMgPerSqFt(obj['p']) * area;
             obj['k'] = convertMgPerSqFt(obj['k']) * area;
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
-            console.log(obj);
             $.ajax({
                 'url': '/predict',
                 'method': 'POST',
@@ -853,12 +876,25 @@
                                 data-pred=${d.pred}></span>
                         </a>`;
                         object.reportS.appendChild(li);
+                        var bsOffcanvas = $("#offcanvasWithBothOptions");
+                        bsOffcanvas.offcanvas('hide');
+                        var child = object.toastHeader.children();
+                        child[0].setAttribute('src', "{% static 'img/success.svg' %}");
+                        child[1].innerHTML = "Success";
+                        object.toastBody.html("Report Saved Successfully");
+                        var toast = new bootstrap.Toast(object.toast);
+                        toast.show();
                     }
                     else {
+                        var bsOffcanvas = $("#offcanvasWithBothOptions");
+                        bsOffcanvas.offcanvas('hide');
+                        var child = object.toastHeader.children();
+                        child[0].setAttribute('src', "{% static 'img/error.svg' %}");
+                        child[1].innerHTML = "Warning";
                         object.toastBody.html("Report Already Saved");
                         var toast = new bootstrap.Toast(object.toast);
                         toast.show();
-                        object.toastBody.html("Please fill all the fields");
+
                     }
                 }
 
@@ -874,6 +910,8 @@
 
         showReport = (id) => {
             var dataEle = $(id.children[1])
+            console.log(dataEle)
+            object.reportH2.html(`Report ${id.id.slice(6)}`)
             object.reportN.val(dataEle.data("n"));
             object.reportP.val(dataEle.data("p"));
             object.reportK.val(dataEle.data("k"));
@@ -897,6 +935,33 @@
             $("#6").removeClass("active");
             $("#4").removeClass("active");
             $(id)[0].classList.add("active");
+
+        }
+
+        deleteReport = () => {
+            var id = object.reportH2.html().slice(7);
+            var reportID = "#report" + id;
+            var ele = $(reportID).parent()
+            var obj = { 'id': id }
+            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            $.ajax({
+                'url': '/delete',
+                'method': 'POST',
+                'data': obj,
+                'dataType': 'json',
+                'success': (d) => {
+                    ele.remove();
+                    var child = object.toastHeader.children();
+                    child[0].setAttribute('src', "{% static 'img/success.svg' %}");
+                    console.log(child[1])
+                    child[1].innerHTML = "Success"
+                    object.toastBody.html("Report Deleted Successfully");
+                    var toast = new bootstrap.Toast(object.toast);
+                    toast.show();
+                }
+
+            })
+            changeToDiv(1);
         }
 
         changeToDiv = (ind) => {
