@@ -246,7 +246,7 @@
                                 Report {{ report.0 }}
                                 <span style="display: none;" data-n="{{ report.1 }}" data-p="{{ report.2 }}"
                                     data-k="{{ report.3 }}" data-rain="{{ report.4 }}" data-area="{{ report.5 }}"
-                                    data-pred="{{ report.6 }}"></span>
+                                    data-pred="{{ report.6 }}" data-month="{{ report.7 }}"></span>
                             </a>
                         </li>
                         {% endfor %}
@@ -562,7 +562,13 @@
                             <label for="Area">Predicted Yield</label>
                         </div>
                     </div>
-
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" class="form-control" id="Growth" placeholder="Growth Period" step="any"
+                                readonly>
+                            <label for="Area">Growth Period</label>
+                        </div>
+                    </div>
                     <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                         type="button" id="delete">Delete</button>
 
@@ -700,6 +706,7 @@
             ridNum: $("#num5"),
             lasNum: $("#num6"),
             predictedValue: 0,
+            month: 1,
             reportS: document.getElementById('reports'),
             toastBody: $("#ToastBody"),
             reportDiv: $("#Report"),
@@ -710,6 +717,7 @@
             reportArea: $("#a"),
             reportPred: $("#Pred"),
             reportH2: $("#h2"),
+            reportGrowth:  $("#Growth"),
             toastHeader: $("#toast-header"),
         }
 
@@ -955,14 +963,16 @@
             obj['p'] = convertMgPerSqFt(obj['p']) * area;
             obj['k'] = convertMgPerSqFt(obj['k']) * area;
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            var month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12 ;
+            object.month = month;
+            obj['month'] = month;
             $.ajax({
                 'url': '/predict',
                 'method': 'POST',
                 'data': obj,
                 'dataType': 'json',
                 'success': (d) => {
-                    var month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12 ;
-                    console.log(month);
+
                     object.predictedValue = (d.val * area) / month;
                     var string = `The total yield for ${area} ha ${object.predictedValue} Kg`;
                     object.predicted.html(string);
@@ -995,7 +1005,7 @@
                             Report ${d.name}
                             <span style="display: none;" data-n=${d.n} data-p=${d.p}
                                 data-k=${d.k} data-rain=${d.rain} data-area=${d.area}
-                                data-pred=${d.pred}></span>
+                                data-pred=${d.pred} data-month = ${d.month}></span>
                         </a>`;
                         object.reportS.appendChild(li);
                         var bsOffcanvas = $("#offcanvasWithBothOptions");
@@ -1041,6 +1051,7 @@
             object.reportArea.val(dataEle.data("area"));
             object.reportPred.val(dataEle.data("pred"));
             object.reportDiv.css("display", "block");
+            object.reportGrowth.val(dataEle.data("month"));
             removeReportActiveClass();
             $("#fill").css("display", "none");
             $("#svr").css("display", "none");

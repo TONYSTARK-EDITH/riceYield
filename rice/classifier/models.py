@@ -66,3 +66,4 @@ class Report(models.Model):
     rain = models.FloatField()
     area = models.FloatField()
     pred = models.FloatField()
+    month = models.FloatField()

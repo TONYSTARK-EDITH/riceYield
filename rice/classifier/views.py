@@ -198,7 +198,7 @@ def home(request):
     Mlr = PutVals(mlr)
     rid = PutVals(ridge)
     las = PutVals(lasso)
-    reports = Report.objects.filter(user=request.user).values_list('id','n','p','k','rain','area','pred')
+    reports = Report.objects.filter(user=request.user).values_list('id','n','p','k','rain','area','pred','month')
     return render(request, 'index.html', {'test': test, 'svr': sv, 'dtr': dtr, 'rf': rf, 'las': las, 'mlr': Mlr, 'rid': rid,'reports':reports})
 
 @login_required
@@ -217,13 +217,14 @@ def Predict(request):
 @login_required
 def saveReports(request):
     if request.is_ajax():
-        n, p, k, rain, area, pred = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get(
-            'k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred'))
+        n, p, k, rain, area, pred,month = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get(
+            'k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred')),float(request.POST.get("month"))
+        month = 12.0 if month == 0 else  month
         try:
             Report.objects.bulk_create(
-                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user, n=n, p=p, k=k, rain=rain, area=area, pred=pred)])
+                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user, n=n, p=p, k=k, rain=rain, area=area, pred=pred,month=month)])
             t = Report.objects.latest('id')
-            return JsonResponse({'name': str(t.id),'n':n,'p':p,'k':k,'rain':rain,'area':area,'pred':pred})
+            return JsonResponse({'name': str(t.id),'n':n,'p':p,'k':k,'rain':rain,'area':area,'pred':pred,'month':month})
         except:
             return JsonResponse({'name': -1})
     else:
