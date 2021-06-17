@@ -321,6 +321,13 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row g-1 mb-3">
+                        <div class="form-floating col-sm-10">
+                            <input type="number" min="1" max="12" class="form-control" id="growthPeriod" placeholder="Growth Period (months)" step="any">
+                            <label for="growthPeriod">Growth Period (months)</label>
+                        </div>
+                    </div>
+
 
                     <button class="btn btn-outline-primary" type="submit" data-bs-target="#offcanvasWithBothOptions"
                         id="pred" aria-controls="offcanvasWithBothOptions">Predict</button>
@@ -328,7 +335,7 @@
                         onclick="clearTheForm();">Clear</button>
 
                 </form>
-                <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0"
+                <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true"
                     style="z-index: 5">
                     <div id="toast" class="toast hide" role="alert" data-bs-autohide="false" aria-live="assertive"
                         aria-atomic="true">
@@ -649,6 +656,7 @@
             myOffcanvas: document.getElementById('offcanvasWithBothOptions'),
             pred: document.getElementById('pred'),
             Predict: $("#Predict"),
+            growthPeriod : $("#growthPeriod"),
             toast: document.getElementById("toast"),
             area: document.getElementById('A'),
             Area: document.getElementById('Area'),
@@ -953,8 +961,10 @@
                 'data': obj,
                 'dataType': 'json',
                 'success': (d) => {
-                    object.predictedValue = d.val * area;
-                    var string = `The total yield for ${area} ha ${d.val * area} Kg`;
+                    var month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12 ;
+                    console.log(month);
+                    object.predictedValue = (d.val * area) / month;
+                    var string = `The total yield for ${area} ha ${object.predictedValue} Kg`;
                     object.predicted.html(string);
                     var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
                     bsOffcanvas.show();
