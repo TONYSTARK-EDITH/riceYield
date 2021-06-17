@@ -146,6 +146,10 @@
                 font-size: 3.5rem;
             }
         }
+
+        .bg-shadow {
+            box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, rgba(255, 255, 255, 0.801) 0px 4px 6px -1px, rgba(255, 255, 255, 0.637) 0px 1px 0px inset;
+        }
     </style>
 
 </head>
@@ -323,7 +327,8 @@
                     </div>
                     <div class="row g-1 mb-3">
                         <div class="form-floating col-sm-10">
-                            <input type="number" min="1" max="12" class="form-control" id="growthPeriod" placeholder="Growth Period (months)" step="any">
+                            <input type="number" min="1" max="12" class="form-control" id="growthPeriod"
+                                placeholder="Growth Period (months)" step="any">
                             <label for="growthPeriod">Growth Period (months)</label>
                         </div>
                     </div>
@@ -335,8 +340,9 @@
                         onclick="clearTheForm();">Clear</button>
 
                 </form>
-                <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true"
-                    style="z-index: 5">
+                <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0"
+                    data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true" style="z-index: 5">
                     <div id="toast" class="toast hide" role="alert" data-bs-autohide="false" aria-live="assertive"
                         aria-atomic="true">
                         <div id="toast-header" class="toast-header">
@@ -662,7 +668,7 @@
             myOffcanvas: document.getElementById('offcanvasWithBothOptions'),
             pred: document.getElementById('pred'),
             Predict: $("#Predict"),
-            growthPeriod : $("#growthPeriod"),
+            growthPeriod: $("#growthPeriod"),
             toast: document.getElementById("toast"),
             area: document.getElementById('A'),
             Area: document.getElementById('Area'),
@@ -717,7 +723,7 @@
             reportArea: $("#a"),
             reportPred: $("#Pred"),
             reportH2: $("#h2"),
-            reportGrowth:  $("#Growth"),
+            reportGrowth: $("#Growth"),
             toastHeader: $("#toast-header"),
         }
 
@@ -963,7 +969,7 @@
             obj['p'] = convertMgPerSqFt(obj['p']) * area;
             obj['k'] = convertMgPerSqFt(obj['k']) * area;
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
-            var month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12 ;
+            var month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12;
             object.month = month;
             obj['month'] = month;
             $.ajax({
@@ -1086,7 +1092,6 @@
                     ele.remove();
                     var child = object.toastHeader.children();
                     child[0].setAttribute('src', "{% static 'img/success.svg' %}");
-                    console.log(child[1])
                     child[1].innerHTML = "Success"
                     object.toastBody.html("Report Deleted Successfully");
                     var toast = new bootstrap.Toast(object.toast);
@@ -1259,19 +1264,19 @@
                         isDark.val("1");
                         $("html").addClass("bg-dark");
                         $("body").addClass("bg-dark text-light");
-                        document.querySelectorAll(".form-control").forEach((e)=>{
+                        document.querySelectorAll(".form-control").forEach((e) => {
                             e.classList.add("bg-dark");
-                            e.classList.add("text-light");  
+                            e.classList.add("text-light");
                         })
                         $(".form-select").addClass("bg-dark text-light");
                         $("#sidebarMenu").addClass("bg-dark");
                         $("#sidebarMenu").removeClass("bg-light");
-                        document.querySelectorAll(".nav-link").forEach((e)=>{
+                        document.querySelectorAll(".nav-link").forEach((e) => {
                             e.classList.add("text-light");
                         })
-                        $(".toast").addClass("bg-dark text-light");
+                        $(".toast").addClass("bg-dark text-light bg-shadow");
                         $(".toast-header").addClass("bg-dark text-light");
-                        document.querySelectorAll("span").forEach((e)=>{
+                        document.querySelectorAll("span").forEach((e) => {
                             e.classList.add("text-light");
                         });
                         $(".btn-close").addClass("btn-close-white");
@@ -1286,20 +1291,20 @@
                         isDark.val("0");
                         $("html").removeClass("bg-dark");
                         $("body").removeClass("bg-dark text-light");
-                        document.querySelectorAll(".form-control").forEach((e)=>{
+                        document.querySelectorAll(".form-control").forEach((e) => {
                             e.classList.remove("bg-dark");
-                            e.classList.remove("text-light");  
+                            e.classList.remove("text-light");
                         })
                         $(".form-select").removeClass("bg-dark");
                         $(".form-select").removeClass("text-light");
                         $("#sidebarMenu").removeClass("bg-dark");
                         $("#sidebarMenu").addClass("bg-light");
-                        document.querySelectorAll(".nav-link").forEach((e)=>{
+                        document.querySelectorAll(".nav-link").forEach((e) => {
                             e.classList.remove("text-light");
                         });
-                        $(".toast").removeClass("bg-dark text-light");
+                        $(".toast").removeClass("bg-dark text-light bg-shadow");
                         $(".toast-header").removeClass("bg-dark text-light");
-                        document.querySelectorAll("span").forEach((e)=>{
+                        document.querySelectorAll("span").forEach((e) => {
                             e.classList.remove("text-light");
                         });
                         $('.offcanvas').removeClass("bg-dark text-light");
