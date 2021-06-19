@@ -36,62 +36,6 @@ y_train = scy.fit_transform(y_train)
 predict -> n:float,p:float,k:float,rain:float
 '''
 
-def welcome(request):
-    if request.user.is_authenticated:
-        return redirect("home")
-
-    return render(request,'login.html')
-
-@ensure_csrf_cookie
-def signup(request):
-    if request.is_ajax():
-        username = request.POST.get('uname')
-        pwd = request.POST.get('pwd')
-        if not User.objects.filter(username = username).exists():
-            usr = User.objects.create_user(username = username, password = pwd)
-            usr.save()
-            return JsonResponse({'response':1})
-        else:
-            return JsonResponse({'response':-1})
-    else:
-        return render(request, 'Error.html')
-
-@ensure_csrf_cookie
-def signin(request):
-    if request.is_ajax():
-        username = request.POST.get('uname')
-        pwd = request.POST.get('pwd')
-        usr = authenticate(username=username,password = pwd)
-        if usr is None:
-            if not User.objects.filter(username = username).exists():
-                return JsonResponse({'response':-1})
-            else:
-                return JsonResponse({'response':-2})
-        login(request,usr)
-        return JsonResponse({'response':1})
-    else:
-        return render(request, 'Error.html')
-
-@login_required
-@ensure_csrf_cookie
-def signout(request):
-    if request.is_ajax():
-        logout(request)
-        return JsonResponse({'response':1})
-    else:
-        return render(request, "Error.html")
-
-
-@login_required
-@ensure_csrf_cookie
-def delete(request):
-    if request.is_ajax():
-        id = request.POST.get('id')
-        Report.objects.get(id = id).delete()
-        return JsonResponse({'response':1})
-    else:
-        return render(request,'Error.html')
-
 def predict(n, p, k, rain):
     model = joblib.load("model.pkl")
     return scy.inverse_transform(model.predict(sc.transform([[n, p, k, rain]])))
@@ -186,6 +130,68 @@ def PutVals(Object, which=1):
     return ",".join(List)
 
 
+def welcome(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    return render(request,'login.html')
+
+@ensure_csrf_cookie
+def signup(request):
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax:
+        username = request.POST.get('uname')
+        pwd = request.POST.get('pwd')
+        if not User.objects.filter(username = username).exists():
+            usr = User.objects.create_user(username = username, password = pwd)
+            usr.save()
+            return JsonResponse({'response':1})
+        else:
+            return JsonResponse({'response':-1})
+    else:
+        return render(request, 'Error.html')
+
+@ensure_csrf_cookie
+def signin(request):
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax:
+        username = request.POST.get('uname')
+        pwd = request.POST.get('pwd')
+        usr = authenticate(username=username,password = pwd)
+        if usr is None:
+            if not User.objects.filter(username = username).exists():
+                return JsonResponse({'response':-1})
+            else:
+                return JsonResponse({'response':-2})
+        login(request,usr)
+        return JsonResponse({'response':1})
+    else:
+        return render(request, 'Error.html')
+
+@login_required
+@ensure_csrf_cookie
+def signout(request):
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax:
+        logout(request)
+        return JsonResponse({'response':1})
+    else:
+        return render(request, "Error.html")
+
+
+@login_required
+@ensure_csrf_cookie
+def delete(request):
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax:
+        id = request.POST.get('id')
+        if not Report.objects.filter(id=id).exists():
+            return JsonResponse({'response':-1})
+        Report.objects.get(id = id).delete()
+        return JsonResponse({'response':1})
+    else:
+        return render(request,'Error.html')
+
+
 @login_required
 def home(request):
     # If Model is not yet trained
@@ -204,7 +210,8 @@ def home(request):
 @login_required
 @ensure_csrf_cookie
 def Predict(request):
-    if request.is_ajax():
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax:
         n, p, k, rain = float(request.POST.get('n')), float(request.POST.get(
             'p')), float(request.POST.get('k')), float(request.POST.get('rain'))
         val = predict(n, p, k, rain)[0]
@@ -216,7 +223,8 @@ def Predict(request):
 @ensure_csrf_cookie
 @login_required
 def saveReports(request):
-    if request.is_ajax():
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax:
         n, p, k, rain, area, pred,month = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get(
             'k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred')),float(request.POST.get("month"))
         month = 12.0 if month == 0 else  month
