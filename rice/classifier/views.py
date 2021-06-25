@@ -13,7 +13,6 @@ from sklearn.tree import DecisionTreeRegressor
 from .models import *
 import os.path as path
 import joblib
-import requests
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -225,8 +224,7 @@ def Predict(request):
 def saveReports(request):
     is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
     if is_ajax:
-        n, p, k, rain, area, pred,month = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get(
-            'k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred')),float(request.POST.get("month"))
+        n, p, k, rain, area, pred,month = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get('k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred')),float(request.POST.get("month"))
         month = 12.0 if month == 0 else  month
         try:
             Report.objects.bulk_create(
