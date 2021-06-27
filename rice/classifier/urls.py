@@ -10,4 +10,5 @@ urlpatterns = [
     path('signin',views.signin,name="signin"),
     path('logout',views.signout,name="logout"),
     path('delete',views.delete,name="delete"),
+    path('report',views.exampleAPI.as_view(),name="example"),
 ]

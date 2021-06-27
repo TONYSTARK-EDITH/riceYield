@@ -1,22 +1,28 @@
-from math import log
-from django.contrib import auth
-from django.shortcuts import render,redirect
-from django.http import JsonResponse, Http404
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
-from sklearn.preprocessing import StandardScaler
+import os.path as path
+
+import joblib
 import pandas as pd
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.http.response import Http404, HttpResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework import serializers
+from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView, Response
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import Lasso, LinearRegression, Ridge
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
+
 from .models import *
-import os.path as path
-import joblib
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from .serializer import predictSerializers
+
 """
 Initial val
 """
@@ -34,6 +40,7 @@ y_train = scy.fit_transform(y_train)
 '''
 predict -> n:float,p:float,k:float,rain:float
 '''
+
 
 def predict(n, p, k, rain):
     model = joblib.load("model.pkl")
@@ -132,7 +139,8 @@ def PutVals(Object, which=1):
 def welcome(request):
     if request.user.is_authenticated:
         return redirect("home")
-    return render(request,'login.html')
+    return render(request, 'login.html')
+
 
 @ensure_csrf_cookie
 def signup(request):
@@ -140,14 +148,15 @@ def signup(request):
     if is_ajax:
         username = request.POST.get('uname')
         pwd = request.POST.get('pwd')
-        if not User.objects.filter(username = username).exists():
-            usr = User.objects.create_user(username = username, password = pwd)
+        if not User.objects.filter(username=username).exists():
+            usr = User.objects.create_user(username=username, password=pwd)
             usr.save()
-            return JsonResponse({'response':1})
+            return JsonResponse({'response': 1})
         else:
-            return JsonResponse({'response':-1})
+            return JsonResponse({'response': -1})
     else:
         return render(request, 'Error.html')
+
 
 @ensure_csrf_cookie
 def signin(request):
@@ -155,16 +164,17 @@ def signin(request):
     if is_ajax:
         username = request.POST.get('uname')
         pwd = request.POST.get('pwd')
-        usr = authenticate(username=username,password = pwd)
+        usr = authenticate(username=username, password=pwd)
         if usr is None:
-            if not User.objects.filter(username = username).exists():
-                return JsonResponse({'response':-1})
+            if not User.objects.filter(username=username).exists():
+                return JsonResponse({'response': -1})
             else:
-                return JsonResponse({'response':-2})
-        login(request,usr)
-        return JsonResponse({'response':1})
+                return JsonResponse({'response': -2})
+        login(request, usr)
+        return JsonResponse({'response': 1})
     else:
         return render(request, 'Error.html')
+
 
 @login_required
 @ensure_csrf_cookie
@@ -172,7 +182,7 @@ def signout(request):
     is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
     if is_ajax:
         logout(request)
-        return JsonResponse({'response':1})
+        return JsonResponse({'response': 1})
     else:
         return render(request, "Error.html")
 
@@ -184,11 +194,11 @@ def delete(request):
     if is_ajax:
         id = request.POST.get('id')
         if not Report.objects.filter(id=id).exists():
-            return JsonResponse({'response':-1})
-        Report.objects.get(id = id).delete()
-        return JsonResponse({'response':1})
+            return JsonResponse({'response': -1})
+        Report.objects.get(id=id).delete()
+        return JsonResponse({'response': 1})
     else:
-        return render(request,'Error.html')
+        return render(request, 'Error.html')
 
 
 @login_required
@@ -203,8 +213,10 @@ def home(request):
     Mlr = PutVals(mlr)
     rid = PutVals(ridge)
     las = PutVals(lasso)
-    reports = Report.objects.filter(user=request.user).values_list('id','n','p','k','rain','area','pred','month')
-    return render(request, 'index.html', {'test': test, 'svr': sv, 'dtr': dtr, 'rf': rf, 'las': las, 'mlr': Mlr, 'rid': rid,'reports':reports})
+    reports = Report.objects.filter(user=request.user).values_list(
+        'id', 'n', 'p', 'k', 'rain', 'area', 'pred', 'month')
+    return render(request, 'index.html', {'test': test, 'svr': sv, 'dtr': dtr, 'rf': rf, 'las': las, 'mlr': Mlr, 'rid': rid, 'reports': reports})
+
 
 @login_required
 @ensure_csrf_cookie
@@ -224,14 +236,85 @@ def Predict(request):
 def saveReports(request):
     is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
     if is_ajax:
-        n, p, k, rain, area, pred,month = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get('k')), float(request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred')),float(request.POST.get("month"))
-        month = 12.0 if month == 0 else  month
+        n, p, k, rain, area, pred, month = float(request.POST.get('n')), float(request.POST.get('p')), float(request.POST.get('k')), float(
+            request.POST.get('rain')), float(request.POST.get('area')), float(request.POST.get('pred')), float(request.POST.get("month"))
+        month = 12.0 if month == 0 else month
         try:
             Report.objects.bulk_create(
-                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user, n=n, p=p, k=k, rain=rain, area=area, pred=pred,month=month)])
+                [Report(which=f"{request.user}{n}{p}{k}{rain}{area}{pred}", user=request.user, n=n, p=p, k=k, rain=rain, area=area, pred=pred, month=month)])
             t = Report.objects.latest('id')
-            return JsonResponse({'name': str(t.id),'n':n,'p':p,'k':k,'rain':rain,'area':area,'pred':pred,'month':month})
+            return JsonResponse({'name': str(t.id), 'n': n, 'p': p, 'k': k, 'rain': rain, 'area': area, 'pred': pred, 'month': month})
         except:
             return JsonResponse({'name': -1})
     else:
         return render(request, "Error.html")
+
+
+def spliter(area_):
+    area_unit, area_val = "", ""
+    for i in area_:
+        if i.isdigit():
+            area_val += i
+        else:
+            area_unit += i
+    return area_unit, area_val
+
+
+def convertMg(va):
+    return (va * 107639) / 1000000
+
+
+def convertArea(unit, area):
+    if unit.lower() == "acre":
+        area /= 2.471
+    elif unit.lower() == "cent":
+        area /= 247.1
+    elif unit.lower() == "sqft":
+        area /= 107639
+    return area
+
+
+class exampleAPI(APIView):
+    def get(self, request):
+        try:
+            n = float(request.GET.get("n"))
+            p = float(request.GET.get("p"))
+            k = float(request.GET.get("k"))
+            rain = float(request.GET.get("rain"))
+            area_unit, area = spliter(request.GET.get("area"))
+            area = int(area)
+            month = int(request.GET.get("month"))
+            co_month = month if month != 12 else 1
+            pred = (predict(convertMg(n), convertMg(p), convertMg(
+                k), rain)/co_month)*convertArea(area_unit, area)
+            data = {'n': n, 'p': p, 'k': k, 'rain': rain, 'area': area, "month": month,
+                    "user": "anonymous", "pred": pred, "area_unit": area_unit, "status": 200}
+            serializerss = predictSerializers(data=data)
+            if serializerss.is_valid():
+                return Response(serializerss.data)
+            else:
+                return Response(serializerss.errors)
+        except:
+            return JsonResponse({'status': 404})
+
+    def post(self, request):
+        try:
+            n = float(request.POST.get("n"))
+            p = float(request.POST.get("p"))
+            k = float(request.POST.get("k"))
+            rain = float(request.POST.get("rain"))
+            area_unit, area = spliter(request.POST.get("area"))
+            area = int(area)
+            month = int(request.POST.get("month"))
+            co_month = month if month != 12 else 1
+            pred = (predict(convertMg(n), convertMg(p), convertMg(
+                k), rain)/co_month)*convertArea(area_unit, area)
+            data = {'n': n, 'p': p, 'k': k, 'rain': rain, 'area': area, "month": month,
+                    "user": "anonymous", "pred": pred, "area_unit": area_unit, "status": 200}
+            serializerss = predictSerializers(data=data)
+            if serializerss.is_valid():
+                return Response(serializerss.data)
+            else:
+                return Response(serializerss.errors)
+        except:
+            return JsonResponse({'status': 404})
