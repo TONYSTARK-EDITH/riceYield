@@ -249,6 +249,9 @@ def saveReports(request):
         return render(request, "Error.html")
 
 
+def error404(request,exception):
+    return render(request,'Error.html',status=404)
+
 def spliter(area_):
     area_unit, area_val = "", ""
     for i in area_:

@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+from django.conf.urls import handler404
+handler404 = "classifier.views.error404"
 urlpatterns = [
     path('',include('classifier.urls')),
     path('admin/', admin.site.urls),
