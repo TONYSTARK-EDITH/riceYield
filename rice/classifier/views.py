@@ -50,9 +50,9 @@ def predict(n, p, k, rain):
 def dataSets():
     model = {}
     st = []
-    # for i in dataset.iloc[:,1:].values:
-    #     st.append(Mlmodel(nitrogen=i[0],phosphorus=i[1],pottasium=i[2],rainfall=i[3],rice_yield=i[4]))
-    # Mlmodel.objects.bulk_create(st)
+    for i in dataset.iloc[:,1:].values:
+        st.append(Mlmodel(nitrogen=i[0],phosphorus=i[1],pottasium=i[2],rainfall=i[3],rice_yield=i[4]))
+    Mlmodel.objects.bulk_create(st)
     '''
     Support Vector Regression : -> kernel -> Radial Base Function
     '''
@@ -60,8 +60,8 @@ def dataSets():
     svr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(svr_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    # st = [svr(predicted=i) for i in y_pred]
-    # svr.objects.bulk_create(st)
+    st = [svr(predicted=i) for i in y_pred]
+    svr.objects.bulk_create(st)
     model[s] = model.get(s, []) + [svr_model]
     '''
     Random Forest Regression : Number of trees -> 100, randomState -> 0
@@ -70,8 +70,8 @@ def dataSets():
     rf_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(rf_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    # st = [RF(predicted=i) for i in y_pred]
-    # RF.objects.bulk_create(st)
+    st = [RF(predicted=i) for i in y_pred]
+    RF.objects.bulk_create(st)
     model[s] = model.get(s, []) + [rf_model]
     '''
     Decision Tree
@@ -80,8 +80,8 @@ def dataSets():
     dtr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(dtr_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    # st = [DTR(predicted=i) for i in y_pred]
-    # DTR.objects.bulk_create(st)
+    st = [DTR(predicted=i) for i in y_pred]
+    DTR.objects.bulk_create(st)
     model[s] = model.get(s, []) + [dtr_model]
     '''
     Multiple Linear Regression
@@ -89,8 +89,8 @@ def dataSets():
     lr_model = LinearRegression()
     lr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(lr_model.predict(X_test))
-    # st = [mlr(predicted=i) for i in y_pred]
-    # mlr.objects.bulk_create(st)
+    st = [mlr(predicted=i) for i in y_pred]
+    mlr.objects.bulk_create(st)
     score = r2_score(y_test, y_pred)
     model[score] = model.get(score, []) + [lr_model]
     ''' 
@@ -99,8 +99,8 @@ def dataSets():
     l = Ridge(alpha=0.2)
     l.fit(X_train, y_train)
     y_pred = scy.inverse_transform(l.predict(X_test))
-    # st = [ridge(predicted=i) for i in y_pred]
-    # ridge.objects.bulk_create(st)
+    st = [ridge(predicted=i) for i in y_pred]
+    ridge.objects.bulk_create(st)
     s = r2_score(y_test, y_pred)
     model[s] = model.get(s, []) + [l]
     '''
@@ -109,15 +109,14 @@ def dataSets():
     l = Lasso(alpha=0.2)
     l.fit(X_train, y_train)
     y_pred = scy.inverse_transform(l.predict(X_test))
-    # st = [lasso(predicted=i) for i in y_pred]
-    # lasso.objects.bulk_create(st)
+    st = [lasso(predicted=i) for i in y_pred]
+    lasso.objects.bulk_create(st)
     s = r2_score(y_test, y_pred)
     model[s] = model.get(s, []) + [l]
 
     model = dict(sorted(model.items(), key=lambda x: x[0], reverse=True))
-    # st = [RealValue(realVal=i) for i in y_test]
-    # RealValue.objects.bulk_create(st)
-    print(model)
+    st = [RealValue(realVal=i) for i in y_test]
+    RealValue.objects.bulk_create(st)
     t = list(model.values())[0][0]
     joblib.dump(t, 'model.pkl')
 
@@ -253,7 +252,7 @@ def saveReports(request):
 def spliter(area_):
     area_unit, area_val = "", ""
     for i in area_:
-        if i.isdigit():
+        if i.isdigit() or i == ".":
             area_val += i
         else:
             area_unit += i
@@ -276,45 +275,22 @@ def convertArea(unit, area):
 
 class exampleAPI(APIView):
     def get(self, request):
-        try:
-            n = float(request.GET.get("n"))
-            p = float(request.GET.get("p"))
-            k = float(request.GET.get("k"))
-            rain = float(request.GET.get("rain"))
-            area_unit, area = spliter(request.GET.get("area"))
-            area = int(area)
-            month = int(request.GET.get("month"))
-            co_month = month if month != 12 else 1
-            pred = (predict(convertMg(n), convertMg(p), convertMg(
-                k), rain)/co_month)*convertArea(area_unit, area)
-            data = {'n': n, 'p': p, 'k': k, 'rain': rain, 'area': area, "month": month,
-                    "user": "anonymous", "pred": pred, "area_unit": area_unit, "status": 200}
-            serializerss = predictSerializers(data=data)
-            if serializerss.is_valid():
-                return Response(serializerss.data)
-            else:
-                return Response(serializerss.errors)
-        except:
-            return JsonResponse({'status': 404})
-
-    def post(self, request):
-        try:
-            n = float(request.POST.get("n"))
-            p = float(request.POST.get("p"))
-            k = float(request.POST.get("k"))
-            rain = float(request.POST.get("rain"))
-            area_unit, area = spliter(request.POST.get("area"))
-            area = int(area)
-            month = int(request.POST.get("month"))
-            co_month = month if month != 12 else 1
-            pred = (predict(convertMg(n), convertMg(p), convertMg(
-                k), rain)/co_month)*convertArea(area_unit, area)
-            data = {'n': n, 'p': p, 'k': k, 'rain': rain, 'area': area, "month": month,
-                    "user": "anonymous", "pred": pred, "area_unit": area_unit, "status": 200}
-            serializerss = predictSerializers(data=data)
-            if serializerss.is_valid():
-                return Response(serializerss.data)
-            else:
-                return Response(serializerss.errors)
-        except:
-            return JsonResponse({'status': 404})
+        n = float(request.GET.get("n"))
+        p = float(request.GET.get("p"))
+        k = float(request.GET.get("k"))
+        rain = float(request.GET.get("rain"))
+        area_unit, area = spliter(request.GET.get("area"))
+        area = float(area)
+        month = int(request.GET.get("month"))
+        if area_unit=="":
+            area_unit = "ha"
+        co_month = month if month != 12 else 1
+        pred = abs((predict(convertMg(n), convertMg(p), convertMg(
+            k), rain)/co_month)*convertArea(area_unit, area))
+        data = {'n': n, 'p': p, 'k': k, 'rain': rain, 'area': area, "month": month,
+                "user": "anonymous", "pred": pred, "area_unit": area_unit, "status": 200}
+        serializerss = predictSerializers(data=data)
+        if serializerss.is_valid():
+            return Response(serializerss.data)
+        else:
+            return Response(serializerss.errors)
