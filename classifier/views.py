@@ -50,7 +50,7 @@ def predict(n, p, k, rain):
 def dataSets():
     model = {}
     st = []
-    for i in dataset.iloc[:,1:].values:
+    for i in dataset.iloc[:1000,1:].values:
         st.append(Mlmodel(nitrogen=i[0],phosphorus=i[1],pottasium=i[2],rainfall=i[3],rice_yield=i[4]))
     Mlmodel.objects.bulk_create(st)
     '''
@@ -60,7 +60,7 @@ def dataSets():
     svr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(svr_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    st = [svr(predicted=i) for i in y_pred]
+    st = [svr(predicted=i) for i in y_pred[:1000]]
     svr.objects.bulk_create(st)
     model[s] = model.get(s, []) + [svr_model]
     '''
@@ -70,7 +70,7 @@ def dataSets():
     rf_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(rf_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    st = [RF(predicted=i) for i in y_pred]
+    st = [RF(predicted=i) for i in y_pred[:1000]]
     RF.objects.bulk_create(st)
     model[s] = model.get(s, []) + [rf_model]
     '''
@@ -80,7 +80,7 @@ def dataSets():
     dtr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(dtr_model.predict(X_test))
     s = r2_score(y_test, y_pred)
-    st = [DTR(predicted=i) for i in y_pred]
+    st = [DTR(predicted=i) for i in y_pred[:1000]]
     DTR.objects.bulk_create(st)
     model[s] = model.get(s, []) + [dtr_model]
     '''
@@ -89,7 +89,7 @@ def dataSets():
     lr_model = LinearRegression()
     lr_model.fit(X_train, y_train)
     y_pred = scy.inverse_transform(lr_model.predict(X_test))
-    st = [mlr(predicted=i) for i in y_pred]
+    st = [mlr(predicted=i) for i in y_pred[:1000]]
     mlr.objects.bulk_create(st)
     score = r2_score(y_test, y_pred)
     model[score] = model.get(score, []) + [lr_model]
@@ -99,7 +99,7 @@ def dataSets():
     l = Ridge(alpha=0.2)
     l.fit(X_train, y_train)
     y_pred = scy.inverse_transform(l.predict(X_test))
-    st = [ridge(predicted=i) for i in y_pred]
+    st = [ridge(predicted=i) for i in y_pred[:1000]]
     ridge.objects.bulk_create(st)
     s = r2_score(y_test, y_pred)
     model[s] = model.get(s, []) + [l]
@@ -109,13 +109,13 @@ def dataSets():
     l = Lasso(alpha=0.2)
     l.fit(X_train, y_train)
     y_pred = scy.inverse_transform(l.predict(X_test))
-    st = [lasso(predicted=i) for i in y_pred]
+    st = [lasso(predicted=i) for i in y_pred[:1000]]
     lasso.objects.bulk_create(st)
     s = r2_score(y_test, y_pred)
     model[s] = model.get(s, []) + [l]
 
     model = dict(sorted(model.items(), key=lambda x: x[0], reverse=True))
-    st = [RealValue(realVal=i) for i in y_test]
+    st = [RealValue(realVal=i) for i in y_test[:1000]]
     RealValue.objects.bulk_create(st)
     t = list(model.values())[0][0]
     joblib.dump(t, 'model.pkl')

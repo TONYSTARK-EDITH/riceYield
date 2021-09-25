@@ -614,7 +614,7 @@
         generateGraph = (t, dat, id, start = 0, end = 100) => {
             feather.replace()
 
-            var ctx = document.getElementById(id)
+            var ctx = document.getElementById(id);
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -733,29 +733,29 @@
 
         disableWhateverYouWant = () => {
             if (object.rfStart >= 100) object.rf0.attr("disabled", false);
-            if (object.rfEnd >= 2554) object.rf1.attr("disabled", true);
+            if (object.rfEnd >= 1000) object.rf1.attr("disabled", true);
             if (object.svrStart >= 100) object.svr0.attr("disabled", false);
-            if (object.svrEnd >= 2554) object.svr1.attr("disabled", true);
+            if (object.svrEnd >= 1000) object.svr1.attr("disabled", true);
             if (object.dtrStart >= 100) object.dtr0.attr("disabled", false);
-            if (object.dtrEnd >= 2554) object.dtr1.attr("disabled", true);
+            if (object.dtrEnd >= 1000) object.dtr1.attr("disabled", true);
             if (object.mlrStart >= 100) object.mlr0.attr("disabled", false);
-            if (object.mlrEnd >= 2554) object.mlr1.attr("disabled", true);
+            if (object.mlrEnd >= 1000) object.mlr1.attr("disabled", true);
             if (object.ridStart >= 100) object.rid0.attr("disabled", false);
-            if (object.ridEnd >= 2554) object.rid1.attr("disabled", true);
+            if (object.ridEnd >= 1000) object.rid1.attr("disabled", true);
             if (object.lasStart >= 100) object.las0.attr("disabled", false);
-            if (object.lasEnd >= 2554) object.las1.attr("disabled", true);
+            if (object.lasEnd >= 1000) object.las1.attr("disabled", true);
             if (object.rfStart <= 0) object.rf0.attr("disabled", true);
-            if (object.rfEnd <= 2500) object.rf1.attr("disabled", false);
+            if (object.rfEnd < 1000) object.rf1.attr("disabled", false);
             if (object.svrStart <= 0) object.svr0.attr("disabled", true);
-            if (object.svrEnd <= 2500) object.svr1.attr("disabled", false);
+            if (object.svrEnd < 1000) object.svr1.attr("disabled", false);
             if (object.dtrStart <= 0) object.dtr0.attr("disabled", true);
-            if (object.dtrEnd <= 2500) object.dtr1.attr("disabled", false);
+            if (object.dtrEnd < 1000) object.dtr1.attr("disabled", false);
             if (object.mlrStart <= 0) object.mlr0.attr("disabled", true);
-            if (object.mlrEnd <= 2500) object.mlr1.attr("disabled", false);
+            if (object.mlrEnd < 1000) object.mlr1.attr("disabled", false);
             if (object.ridStart <= 0) object.rid0.attr("disabled", true);
-            if (object.ridEnd <= 2500) object.rid1.attr("disabled", false);
+            if (object.ridEnd < 1000) object.rid1.attr("disabled", false);
             if (object.lasStart <= 0) object.las0.attr("disabled", true);
-            if (object.lasEnd <= 2500) object.las1.attr("disabled", false);
+            if (object.lasEnd < 1000) object.las1.attr("disabled", false);
         }
 
         clearTheForm = () => {
