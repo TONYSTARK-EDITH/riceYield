@@ -3,9 +3,11 @@
 <html>
 
 <head>
+    <link rel="icon" href="{% static 'img/agriculture.png' %}">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <title>Crop yield</title>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Mukta');
 
@@ -179,15 +181,14 @@
             text-decoration: none;
             color: #2c7715;
         }
+
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,
         input:-webkit-autofill:active {
             transition: background-color 5000s ease-in-out 0s;
         }
-        
     </style>
-    <title>Rice Yield</title>
 </head>
 
 <body>
@@ -327,18 +328,18 @@
                                         var ele = document.getElementById('register');
                                         var div = document.createElement('div');
                                         div.className = "alert alert-success alert-dismissible fade show";
-                                        div.setAttribute("role","alert");
+                                        div.setAttribute("role", "alert");
                                         div.innerHTML = `
                                             <strong>Registered</strong> Successfully
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         `;
                                         ele.appendChild(div);
                                     }
-                                    else{
+                                    else {
                                         var ele = document.getElementById('register');
                                         var div = document.createElement('div');
                                         div.className = "alert alert-warning alert-dismissible fade show";
-                                        div.setAttribute("role","alert");
+                                        div.setAttribute("role", "alert");
                                         div.innerHTML = `
                                             User with the email <strong>${obj.uname}</strong> is present. Please login!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -349,7 +350,7 @@
 
                             })
 
-                        }else{
+                        } else {
                             $("#Lemail").removeClass("is-invalid");
                             $("#Lpwd").removeClass("is-invalid");
                             var obj = { 'uname': $("#Lemail").val(), 'pwd': $("#Lpwd").val() }
@@ -366,12 +367,12 @@
                                         $("#Lemail").addClass("is-invalid");
                                         $("#ifbe").html("Email is not registered");
                                     }
-                                    else if(d.response == "-2"){
+                                    else if (d.response == "-2") {
                                         $("#login").removeClass("was-validated");
                                         $("#Lpwd").addClass("is-invalid");
                                         $("#ifbp").html("Password is incorrect");
                                     }
-                                    else{
+                                    else {
                                         document.location.href = "/home";
                                     }
                                 }

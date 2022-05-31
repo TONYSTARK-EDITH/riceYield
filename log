@@ -1,0 +1,130 @@
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,763 : Batch model has been created in splitter._batch_model()s at line number : 24 
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,763 : Retrieving the attributes and methods from the given model in splitter._find_the_base_class()s at line number : 31 
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,763 : Model base class has been identified in splitter._find_the_base_class()s at line number : 34 
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,765 : Batch list has been generated with the refined batch models in splitter._bootstrap()s at line number : 44 
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,766 : Batch models has been successfully created in dlt._split_models_into_batches()s at line number : 106 
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,766 : Batch models has been stored in the hash map in dlt._split_models_into_batches()s at line number : 108 
+[INFO] - [pid 20388] - 2022-05-17 00:39:58,767 : Batch - 1 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:39:59,302 : Batch - 1 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:39:59,303 : Batch - 2 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:39:59,843 : Batch - 2 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:39:59,843 : Batch - 3 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:00,396 : Batch - 3 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:00,396 : Batch - 4 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:00,952 : Batch - 4 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:00,952 : Batch - 5 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:01,559 : Batch - 5 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:01,560 : Batch - 6 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:02,156 : Batch - 6 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:02,156 : Batch - 7 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:02,832 : Batch - 7 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:02,832 : Batch - 8 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:03,477 : Batch - 8 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:03,477 : Batch - 9 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:04,138 : Batch - 9 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:04,138 : Batch - 10 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:04,887 : Batch - 10 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,052 : Batch model has been created in splitter._batch_model()s at line number : 24 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,052 : Batch model has been created in splitter._batch_model()s at line number : 24 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,053 : Retrieving the attributes and methods from the given model in splitter._find_the_base_class()s at line number : 31 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,053 : Retrieving the attributes and methods from the given model in splitter._find_the_base_class()s at line number : 31 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,053 : Model base class has been identified in splitter._find_the_base_class()s at line number : 34 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,053 : Model base class has been identified in splitter._find_the_base_class()s at line number : 34 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,055 : Batch list has been generated with the refined batch models in splitter._bootstrap()s at line number : 44 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,055 : Batch list has been generated with the refined batch models in splitter._bootstrap()s at line number : 44 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,056 : Batch models has been successfully created in dlt._split_models_into_batches()s at line number : 106 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,056 : Batch models has been successfully created in dlt._split_models_into_batches()s at line number : 106 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,056 : Batch models has been stored in the hash map in dlt._split_models_into_batches()s at line number : 108 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,056 : Batch models has been stored in the hash map in dlt._split_models_into_batches()s at line number : 108 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,056 : Batch - 1 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,056 : Batch - 1 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,602 : Batch - 1 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,602 : Batch - 1 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,602 : Batch - 2 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:37,602 : Batch - 2 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,136 : Batch - 2 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,136 : Batch - 2 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,136 : Batch - 3 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,136 : Batch - 3 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,722 : Batch - 3 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,722 : Batch - 3 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,723 : Batch - 4 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:38,723 : Batch - 4 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:39,439 : Batch - 4 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:39,439 : Batch - 4 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:39,440 : Batch - 5 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:39,440 : Batch - 5 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,166 : Batch - 5 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,166 : Batch - 5 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,166 : Batch - 6 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,166 : Batch - 6 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,964 : Batch - 6 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,964 : Batch - 6 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,965 : Batch - 7 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:40,965 : Batch - 7 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:41,525 : Batch - 7 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:41,525 : Batch - 7 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:41,525 : Batch - 8 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:41,525 : Batch - 8 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,058 : Batch - 8 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,058 : Batch - 8 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,058 : Batch - 9 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,058 : Batch - 9 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,590 : Batch - 9 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,590 : Batch - 9 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,591 : Batch - 10 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:42,591 : Batch - 10 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 20388] - 2022-05-17 00:40:43,316 : Batch - 10 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 20388] - 2022-05-17 00:40:43,316 : Batch - 10 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,792 : Batch model has been created in splitter._batch_model()s at line number : 24 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,792 : Retrieving the attributes and methods from the given model in splitter._find_the_base_class()s at line number : 31 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,793 : Model base class has been identified in splitter._find_the_base_class()s at line number : 34 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,795 : Batch list has been generated with the refined batch models in splitter._bootstrap()s at line number : 44 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,795 : Batch models has been successfully created in dlt._split_models_into_batches()s at line number : 106 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,796 : Batch models has been stored in the hash map in dlt._split_models_into_batches()s at line number : 108 
+[INFO] - [pid 2144] - 2022-05-17 00:40:55,796 : Batch - 1 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,079 : Batch - 1 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,079 : Batch - 2 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,365 : Batch - 2 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,365 : Batch - 3 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,646 : Batch - 3 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,647 : Batch - 4 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,923 : Batch - 4 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:56,923 : Batch - 5 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:57,198 : Batch - 5 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:57,198 : Batch - 6 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:57,477 : Batch - 6 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:57,477 : Batch - 7 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:57,777 : Batch - 7 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:57,777 : Batch - 8 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:58,087 : Batch - 8 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:58,087 : Batch - 9 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:58,374 : Batch - 9 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 2144] - 2022-05-17 00:40:58,374 : Batch - 10 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 2144] - 2022-05-17 00:40:58,669 : Batch - 10 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,835 : Batch model has been created in splitter._batch_model()s at line number : 24 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,836 : Retrieving the attributes and methods from the given model in splitter._find_the_base_class()s at line number : 31 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,836 : Model base class has been identified in splitter._find_the_base_class()s at line number : 34 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,840 : Batch list has been generated with the refined batch models in splitter._bootstrap()s at line number : 44 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,842 : Batch models has been successfully created in dlt._split_models_into_batches()s at line number : 106 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,842 : Batch models has been stored in the hash map in dlt._split_models_into_batches()s at line number : 108 
+[INFO] - [pid 8748] - 2022-05-17 00:42:26,842 : Batch - 1 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:27,497 : Batch - 1 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:27,497 : Batch - 2 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:27,992 : Batch - 2 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:27,992 : Batch - 3 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:28,443 : Batch - 3 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:28,443 : Batch - 4 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:28,866 : Batch - 4 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:28,867 : Batch - 5 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:29,252 : Batch - 5 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:29,252 : Batch - 6 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:29,637 : Batch - 6 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:29,638 : Batch - 7 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:30,033 : Batch - 7 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:30,033 : Batch - 8 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:30,421 : Batch - 8 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:30,422 : Batch - 9 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:30,822 : Batch - 9 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 
+[INFO] - [pid 8748] - 2022-05-17 00:42:30,822 : Batch - 10 training has been started in dlt._split_models_into_batches()s at line number : 110 
+[INFO] - [pid 8748] - 2022-05-17 00:42:31,218 : Batch - 10 accuracy has been calculated in dlt._split_models_into_batches()s at line number : 125 

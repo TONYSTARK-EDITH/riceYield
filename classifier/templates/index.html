@@ -5,9 +5,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Rice Yield Prediction">
+    <meta name="description" content="Crop Yield Prediction">
     <meta name="author" content="Tony Stark">
-    <title>Rice Yield</title>
+    <link rel="icon" href="{% static 'img/agriculture.png' %}">
+    <title>Crop Yield</title>
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
     <!-- <link href="{% static 'css/nano.css' %}" rel="stylesheet"> -->
@@ -156,7 +157,7 @@
 
 <body>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Rice Yield</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Crop Yield</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -180,7 +181,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" id="1" aria-current="page" onclick="changeToDiv(1);">
+                            <a class="btn-link nav-link active" id="1" aria-current="page" onclick="changeToDiv(1);">
                                 <span data-feather="home"></span>
                                 Dashboard
                             </a>
@@ -222,6 +223,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="btn-link nav-link" id="10" onclick="changeToDiv(10);">
+                                <span data-feather="cpu"></span>
+                                Performance Analysis
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn-link nav-link" id="11" onclick="changeToDiv(11);">
+                                <span data-feather="server"></span>
+                                Reverse Engineering <span class="badge rounded-pill bg-success">Beta</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="btn-link nav-link" id="9" onclick="changeToDiv(9);">
                                 <svg id="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
@@ -232,6 +245,7 @@
                                 <span id="mode">Dark UI</span>
                             </a>
                         </li>
+
                     </ul>
 
                     <h6
@@ -247,10 +261,11 @@
                             <a style="float: left;" id="report{{ report.0 }}" class="btn-link nav-link ReportList"
                                 onclick="showReport(this);">
                                 <span data-feather="file-text"></span>
-                                Report {{ report.0 }}
+                                {{ report.0 }}
                                 <span style="display: none;" data-n="{{ report.1 }}" data-p="{{ report.2 }}"
                                     data-k="{{ report.3 }}" data-rain="{{ report.4 }}" data-area="{{ report.5 }}"
-                                    data-pred="{{ report.6 }}" data-month="{{ report.7 }}"></span>
+                                    data-pred="{{ report.6 }}" data-month="{{ report.7 }}" data-temp="{{ report.8 }}"
+                                    data-moist="{{ report.9 }}" data-crop="{{ report.10 }}"></span>
                             </a>
                         </li>
                         {% endfor %}
@@ -279,6 +294,29 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="saveModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="saveModelLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="saveModelLabel">Name of the report</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="report_name" placeholder="Report Name"
+                                    required>
+                                <label for="floatingInput">Report Name</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success" onclick="saveReport()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="fill">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -287,13 +325,14 @@
                 <form class="form-floating" id="Predict">
                     <div class="row g-1 mb-3">
                         <div class="form-floating col-sm-10">
-                            <input type="number" class="form-control" id="Nitrogen" placeholder="Nitrogen" step="any">
+                            <input type="number" class="form-control" id="Nitrogen" placeholder="Nitrogen" min="1"
+                                step="any">
                             <label for="Nitrogen">Nitrogen (mg/square feet)</label>
                         </div>
                     </div>
                     <div class="row g-1 mb-3">
                         <div class="form-floating col-sm-10">
-                            <input type="number" class="form-control" id="Phosphorus" placeholder="Phosphorus"
+                            <input type="number" class="form-control" id="Phosphorus" min="1" placeholder="Phosphorus"
                                 step="any">
                             <label for="Phosphorus">Phosphorus (mg/square feet)</label>
                         </div>
@@ -301,21 +340,23 @@
 
                     <div class="row g-1 mb-3">
                         <div class="form-floating col-sm-10">
-                            <input type="number" class="form-control" id="Pottasium" placeholder="Pottasium" step="any">
+                            <input type="number" class="form-control" id="Pottasium" min="1" placeholder="Pottasium"
+                                step="any">
                             <label for="Pottasium">Pottasium (mg/square feet)</label>
                         </div>
                     </div>
 
                     <div class="form-floating mb-3 col-sm-10">
-                        <input type="number" class="form-control" id="Rainfall" placeholder="Rainfall" step="any">
+                        <input type="number" class="form-control" id="Rainfall" min="25" placeholder="Rainfall"
+                            step="any">
                         <label for="Rainfall">Avg. Rainfall</label>
                     </div>
-                    <div class="row g-2">
-                        <div class="form-floating col-sm-9">
+                    <div class="row g-1">
+                        <div class="form-floating col-sm-8">
                             <input type="number" class="form-control" id="Area" placeholder="Area" step="any">
                             <label for="Area">Area</label>
                         </div>
-                        <div class="col-auto">
+                        <div class="col-sm-2">
                             <select class="form-select form-select-md mb-3" id="A"
                                 style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
                                 <option value="ha" selected>&nbsp;ha&nbsp;</option>
@@ -333,6 +374,40 @@
                         </div>
                     </div>
 
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" id="Temperature" min="15" placeholder="Temperature"
+                            step="any">
+                        <label for="Temperature">Temperature (&deg;C)</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" min="1" id="Moisture" placeholder="Moisture"
+                            step="any">
+                        <label for="Rainfall">Moisture</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" min="1" id="Humidity" placeholder="Humidity"
+                            step="any">
+                        <label for="Rainfall">Humidity</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" min="0" max="14" id="Ph" placeholder="Ph" step="any">
+                        <label for="Ph">Ph</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-10">
+                        <select class="form-select form-select-md mb-3" id="crops"
+                            style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
+                            <option value="Paddy" selected>&nbsp;Paddy&nbsp;</option>
+                            <option value="Sugarcane">&nbsp;Sugarcane&nbsp;</option>
+                            <option value="Cotton">&nbsp;Cotton&nbsp;</option>
+                            <option value="Millets">&nbsp;Millets&nbsp;</option>
+                            <option value="Barley">&nbsp;Barley&nbsp;</option>
+                            <option value="Wheat">&nbsp;Wheat&nbsp;</option>
+                            <option value="Oil seeds">&nbsp;Oil seeds&nbsp;</option>
+                            <option value="Pulses">&nbsp;Pulses&nbsp;</option>
+                            <option value="Ground Nuts">&nbsp;Ground Nuts&nbsp;</option>
+                        </select>
+                    </div>
 
                     <button class="btn btn-outline-primary" type="submit" data-bs-target="#offcanvasWithBothOptions"
                         id="pred" aria-controls="offcanvasWithBothOptions">Predict</button>
@@ -343,8 +418,8 @@
                 <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0"
                     data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel"
                     aria-hidden="true" style="z-index: 5">
-                    <div id="toast" class="toast hide shadow" role="alert" data-bs-autohide="false" aria-live="assertive"
-                        aria-atomic="true">
+                    <div id="toast" class="toast hide shadow" role="alert" data-bs-autohide="false"
+                        aria-live="assertive" aria-atomic="true">
                         <div id="toast-header" class="toast-header">
                             <img src="{% static 'img/error.svg'  %}" class="rounded me-2" alt="...">
                             <strong class="me-auto">Warning</strong>
@@ -575,10 +650,157 @@
                             <label for="Area">Growth Period</label>
                         </div>
                     </div>
+
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" id="te" min="15" placeholder="Temperature" step="any"
+                            readonly>
+                        <label for="Temperature">Temperature (&deg;C)</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="number" class="form-control" min="1" id="mo" placeholder="Moisture" step="any"
+                            readonly>
+                        <label for="Rainfall">Moisture</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-sm-10">
+                        <input type="text" class="form-control" id="cr" placeholder="Crop" step="any" readonly>
+                        <label for="Rainfall">Crop</label>
+                    </div>
+
                     <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                         type="button" id="delete">Delete</button>
 
                 </form>
+            </div>
+        </div>
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="pa" style="display: none;">
+            <div class="d-flex">
+                <div class="d-flex flex-column align-items-center p-2 w-100 bd-highlight">
+                    <button class="btn btn-outline-primary" id="existing_btn" onclick="startTesting('existing');">Start
+                        Testing -
+                        Existing</button>
+                    <div class="d-flex flex-column p-2 w-100">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle caption-top table-hover"
+                                style="display: none;" id="existing_info">
+                                <caption>Server Information</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Features</th>
+                                        <th scope="col">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="existing_body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <ul class="nav nav-pills" style="display: none;" id="existing_ul">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" data-which="existing"
+                                data-bs-toggle="tab" href="#">1</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" data-which="existing" data-bs-toggle="tab"
+                                href="#">2</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="existing" data-bs-toggle="tab"
+                                href="#">3</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="existing" data-bs-toggle="tab"
+                                href="#">4</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="existing" data-bs-toggle="tab"
+                                href="#">5</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="existing" data-bs-toggle="tab"
+                                href="#">6</a></li>
+                    </ul>
+
+                    <canvas class="my-4 w-100" width="900" height="380" id="existing"></canvas>
+
+                </div>
+                <div class="d-flex flex-column align-items-center p-2 w-100 bd-highlight">
+                    <button class="btn btn-outline-primary" id="proposed_btn" onclick="startTesting('proposed');">Start
+                        Testing -
+                        Proposed</button>
+                    <div class="d-flex flex-column p-2 w-100">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle caption-top table-hover"
+                                style="display: none;" id="proposed_info">
+                                <caption>Server Information</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Features</th>
+                                        <th scope="col">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="proposed_body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <ul class="nav nav-pills" style="display: none;" id="proposed_ul">
+                        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" aria-current="page"
+                                data-which="proposed" href="">1</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="proposed" data-bs-toggle="tab"
+                                href="">2</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="proposed" data-bs-toggle="tab"
+                                href="">3</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="proposed" data-bs-toggle="tab"
+                                href="">4</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="proposed" data-bs-toggle="tab"
+                                href="">5</a></li>
+                        <li class="nav-item"><a class="nav-link" data-which="proposed" data-bs-toggle="tab"
+                                href="">6</a></li>
+                    </ul>
+
+
+                    <canvas class="my-4 w-100" width="900" height="380" id="proposed"></canvas>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5" id="re_pre" style="display: none;">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Nutrients Predict</h1>
+            </div>
+            <form class="form-floating" id="Re_Predict">
+                <div class="row g-1 mb-3" id="unknown">
+                    <div class="form-floating col-sm-10">
+                        <input type="number" class="form-control" id="yield" placeholder="Yield (Kg/Ha)" min="1"
+                            step="any">
+                        <label for="Nitrogen">Yield (Kg/Ha)</label>
+                    </div>
+                    <div class="form-floating mb-3 col-sm-10">
+                        <select class="form-select form-select-md mb-3" id="fertilizer"
+                            style="padding-top: 16px; padding-bottom: 16px;" aria-label=".form-select-lg example">
+                            <option value="10-26-26" selected>&nbsp;10-26-26&nbsp;</option>
+                            <option value="14-35-14">&nbsp;14-35-14&nbsp;</option>
+                            <option value="17-17-17">&nbsp;17-17-17&nbsp;</option>
+                            <option value="20-20">&nbsp;20-20&nbsp;</option>
+                            <option value="28-28">&nbsp;28-28&nbsp;</option>
+                            <option value="DAP">&nbsp;DAP&nbsp;</option>
+                            <option value="Urea">&nbsp;Urea&nbsp;</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button class="btn btn-outline-primary" type="submit" id="re_pred">Predict</button>
+                <button class="btn btn-outline-danger" type="button" id="re_clear"
+                    onclick="clearTheForm();">Clear</button>
+            </form>
+            <div class="toast-container position-fixed p-3 top-50 start-50 translate-middle border-0"
+                data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel"
+                aria-hidden="true" style="z-index: 5">
+                <div id="re-toast" class="toast hide shadow" role="alert" data-bs-autohide="false" aria-live="assertive"
+                    aria-atomic="true">
+                    <div id="re-toast-header" class="toast-header">
+                        <img src="{% static 'img/error.svg'  %}" class="rounded me-2" alt="...">
+                        <strong class="me-auto">Warning</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div id="re-ToastBody" class="toast-body">
+                        Please fill all the fields.
+                    </div>
+                </div>
             </div>
         </div>
         <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
@@ -588,13 +810,15 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body"
+            <div class="offcanvas-body p-0"
                 style="text-align: center; text-transform: capitalize; font-size: large; overflow: hidden;">
-                <p id="predictedValue" style="overflow: hidden;">Try scrolling the rest of the page to see this option
+                <p id="predictedValue" style="overflow: hidden;white-space: pre-line;">Try scrolling the rest of the
+                    page
+                    to see this option
                     in action.</p>
             </div>
             <div class="offcanvas-foot" style="text-align: right; margin:25px;">
-                <button class="btn btn-outline-success" onclick="saveReport();">Save Report</button>
+                <button class="btn btn-outline-success" onclick="openSaveModel();">Save Report</button>
             </div>
         </div>
 
@@ -604,18 +828,16 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
         integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
-        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.js"
+        integrity="sha512-Lii3WMtgA0C0qmmkdCpsG0Gjr6M0ajRyQRQSbTF6BsrVh/nhZdHpVZ76iMIPvQwz1eoXC3DmAg9K51qT5/dEVg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- <script src="{% static 'js/nano.js' %}"></script> -->
-
-
     <script>
         generateGraph = (t, dat, id, start = 0, end = 100) => {
             feather.replace()
 
-            var ctx = document.getElementById(id);
-            var myChart = new Chart(ctx, {
+            let ctx = document.getElementById(id);
+            let myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: t.slice(start, end),
@@ -635,12 +857,20 @@
                     ]
                 },
                 options: {
+                    responsive: true,
+                    animations: {
+                        radius: {
+                            duration: 400,
+                            easing: 'linear',
+                            loop: context => context.active
+                        }
+                    },
                     scales: {
-                        yAxes: [{
+                        y: {
                             ticks: {
                                 beginAtZero: false
                             }
-                        }]
+                        }
                     },
                     legend: {
                         display: true
@@ -650,26 +880,34 @@
             return myChart;
         }
 
-        var t = "{{ test }}".split(",");
-        var svr = "{{ svr }}".split(",");
-        var rf = "{{ rf }}".split(",");
-        var dtr = "{{ dtr }}".split(",");
-        var mlr = "{{ mlr }}".split(",");
-        var las = "{{ las }}".split(",");
-        var rid = "{{ rid }}".split(",");
+        let t = "{{ test }}".split(",");
+        let svr = "{{ svr }}".split(",");
+        let rf = "{{ rf }}".split(",");
+        let dtr = "{{ dtr }}".split(",");
+        let mlr = "{{ mlr }}".split(",");
+        let las = "{{ las }}".split(",");
+        let rid = "{{ rid }}".split(",");
 
 
-        var object = {
+        let object = {
+            saveModel: new bootstrap.Modal(document.getElementById("saveModel")),
             nitrogen: document.getElementById("Nitrogen"),
             phosporus: document.getElementById("Phosphorus"),
             pottasium: document.getElementById('Pottasium'),
             rainfall: document.getElementById('Rainfall'),
             area: document.getElementById('Area'),
+            temperature: document.getElementById("Temperature"),
+            moisture: document.getElementById("Moisture"),
+            humidity: document.getElementById("Humidity"),
+            ph: document.getElementById("Ph"),
+            crop: document.getElementById("crops"),
             myOffcanvas: document.getElementById('offcanvasWithBothOptions'),
             pred: document.getElementById('pred'),
             Predict: $("#Predict"),
+            re_Predict: $("#Re_Predict"),
             growthPeriod: $("#growthPeriod"),
             toast: document.getElementById("toast"),
+            re_toast: document.getElementById("re-toast"),
             area: document.getElementById('A'),
             Area: document.getElementById('Area'),
             firstDiv: $("#fill"),
@@ -715,7 +953,6 @@
             month: 1,
             reportS: document.getElementById('reports'),
             toastBody: $("#ToastBody"),
-            reportDiv: $("#Report"),
             reportN: $("#n"),
             reportP: $("#p"),
             reportK: $("#k"),
@@ -724,10 +961,17 @@
             reportPred: $("#Pred"),
             reportH2: $("#h2"),
             reportGrowth: $("#Growth"),
+            reportTemp: $("#te"),
+            reportMoist: $("#mo"),
+            reportCrop: $("#cr"),
             toastHeader: $("#toast-header"),
+            existingPerformance: null,
+            proposedPerformance: null,
+            existingData: null,
+            proposedData: null,
         }
 
-        checkString = (str) => {
+        checkString = str => {
             return (str === "" || str === " ");
         }
 
@@ -758,8 +1002,14 @@
             if (object.lasEnd < 1000) object.las1.attr("disabled", false);
         }
 
+        clearDummy = () => {
+            document.querySelectorAll(".dummy").forEach(e => $(e).remove());
+        }
+
         clearTheForm = () => {
             object.Predict.trigger("reset");
+            object.re_Predict.trigger("reset");
+            clearDummy();
         }
 
 
@@ -773,9 +1023,9 @@
                         object.rf.data.datasets[1].data = t.slice(object.rfStart, object.rfEnd);
                         object.rf.update();
                         object.rfNum.html(`
-                            ${object.rfStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.rfEnd}`
+                    ${object.rfStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.rfEnd}`
                         )
                         break
                     }
@@ -786,9 +1036,9 @@
                         object.svr.data.datasets[1].data = t.slice(object.svrStart, object.svrEnd);
                         object.svr.update();
                         object.svrNum.html(`
-                            ${object.svrStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.svrEnd}`
+                    ${object.svrStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.svrEnd}`
                         )
                         break
 
@@ -800,9 +1050,9 @@
                         object.dtr.data.datasets[1].data = t.slice(object.dtrStart, object.dtrEnd);
                         object.dtr.update();
                         object.dtrNum.html(`
-                            ${object.dtrStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.dtrEnd}`
+                    ${object.dtrStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.dtrEnd}`
                         )
                         break
                     }
@@ -813,9 +1063,9 @@
                         object.mlr.data.datasets[1].data = t.slice(object.mlrStart, object.mlrEnd);
                         object.mlr.update();
                         object.mlrNum.html(`
-                            ${object.mlrStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.mlrEnd}`
+                    ${object.mlrStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.mlrEnd}`
                         )
                         break
                     }
@@ -826,9 +1076,9 @@
                         object.rid.data.datasets[1].data = t.slice(object.ridStart, object.ridEnd);
                         object.rid.update();
                         object.ridNum.html(`
-                            ${object.ridStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.ridEnd}`
+                    ${object.ridStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.ridEnd}`
                         )
                         break
                     }
@@ -839,9 +1089,9 @@
                         object.las.data.datasets[1].data = t.slice(object.lasStart, object.lasEnd);
                         object.las.update();
                         object.lasNum.html(`
-                            ${object.lasStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.lasEnd}`
+                    ${object.lasStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.lasEnd}`
                         )
                         break
                     }
@@ -855,9 +1105,9 @@
                         object.rf.data.datasets[1].data = t.slice(object.rfStart, object.rfEnd);
                         object.rf.update();
                         object.rfNum.html(`
-                            ${object.rfStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.rfEnd}`
+                    ${object.rfStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.rfEnd}`
                         )
 
                         break
@@ -869,9 +1119,9 @@
                         object.svr.data.datasets[1].data = t.slice(object.svrStart, object.svrEnd);
                         object.svr.update();
                         object.svrNum.html(`
-                            ${object.svrStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.svrEnd}`
+                    ${object.svrStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.svrEnd}`
                         )
                         break
                     }
@@ -882,9 +1132,9 @@
                         object.dtr.data.datasets[1].data = t.slice(object.dtrStart, object.dtrEnd);
                         object.dtr.update();
                         object.dtrNum.html(`
-                            ${object.dtrStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.dtrEnd}`
+                    ${object.dtrStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.dtrEnd}`
                         )
                         break
                     }
@@ -895,9 +1145,9 @@
                         object.mlr.data.datasets[1].data = t.slice(object.mlrStart, object.mlrEnd);
                         object.mlr.update();
                         object.mlrNum.html(`
-                            ${object.mlrStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.mlrEnd}`
+                    ${object.mlrStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.mlrEnd}`
                         )
                         break
                     }
@@ -908,9 +1158,9 @@
                         object.rid.data.datasets[1].data = t.slice(object.ridStart, object.ridEnd);
                         object.rid.update();
                         object.ridNum.html(`
-                            ${object.ridStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.ridEnd}`
+                    ${object.ridStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.ridEnd}`
                         )
                         break
                     }
@@ -921,9 +1171,9 @@
                         object.las.data.datasets[1].data = t.slice(object.lasStart, object.lasEnd);
                         object.las.update();
                         object.lasNum.html(`
-                            ${object.lasStart}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            ${object.lasEnd}`
+                    ${object.lasStart}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    ${object.lasEnd}`
                         )
                         break
                     }
@@ -953,23 +1203,31 @@
 
         object.Predict.submit((event) => {
             event.preventDefault();
-            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) || checkString(object.rainfall.value) || checkString(object.Area.value)) {
-                var child = object.toastHeader.children();
+            if (checkString(object.nitrogen.value) || checkString(object.phosporus.value) || checkString(object.pottasium.value) || checkString(object.rainfall.value) || checkString(object.Area.value) || checkString(object.temperature.value) || checkString(object.moisture.value) || checkString(object.humidity.value) || checkString(object.ph.value)) {
+                let child = object.toastHeader.children();
                 child[0].setAttribute('src', "{% static 'img/error.svg' %}");
                 child[1].innerHTML = "Warning";
                 object.toastBody.html("Please fill all the fields");
-                var toast = new bootstrap.Toast(object.toast);
+                let toast = new bootstrap.Toast(object.toast);
                 toast.show();
                 return;
             }
-            var unit = object.area.value, area = object.Area.value;
+            let unit = object.area.value, area = object.Area.value;
             area = convertArea(unit, area);
-            var obj = { 'n': parseFloat(object.nitrogen.value), 'p': parseFloat(object.phosporus.value), 'k': parseFloat(object.pottasium.value), 'rain': parseFloat(object.rainfall.value) }
-            obj['n'] = convertMgPerSqFt(obj['n']) * area;
-            obj['p'] = convertMgPerSqFt(obj['p']) * area;
-            obj['k'] = convertMgPerSqFt(obj['k']) * area;
+            let obj = {
+                'n': parseFloat(object.nitrogen.value),
+                'p': parseFloat(object.phosporus.value),
+                'k': parseFloat(object.pottasium.value),
+                'rain': parseFloat(object.rainfall.value),
+                'temp': parseFloat(object.temperature.value),
+                'moist': parseFloat(object.moisture.value),
+                'humidity': parseFloat(object.humidity.value),
+                'ph': parseFloat(object.ph.value),
+                'crop': object.crop.value,
+                'area': area,
+            }
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
-            var month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12;
+            let month = object.growthPeriod.val() % 12 == 0 ? 1 : object.growthPeriod.val() % 12;
             object.month = month;
             obj['month'] = month;
             $.ajax({
@@ -980,19 +1238,63 @@
                 'success': (d) => {
 
                     object.predictedValue = (d.val * area) / month;
-                    var string = `The total yield for ${area} ha ${object.predictedValue} Kg`;
+                    let string = `The total yield for ${area} ha <span class='bg-info p-1 bg-gradient rounded-3'>${object.predictedValue} Kg</span>.\nThe best fertilizer to use is <span class='bg-info p-1 rounded-3 bg-gradient'>${d.fert}</span>\nThe best crop to use is <span class='bg-info p-1 rounded-3 bg-gradient'>${d.crop}</span>`;
                     object.predicted.html(string);
-                    var bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
+                    let bsOffcanvas = new bootstrap.Offcanvas(object.myOffcanvas);
                     bsOffcanvas.show();
                 }
 
             })
+        })
 
 
+        object.re_Predict.submit(event => {
+            clearDummy();
+            event.preventDefault();
+            if (checkString($("#yield").val()) == true) {
+                let toast = new bootstrap.Toast(object.re_toast);
+                toast.show();
+                return;
+            }
+            let obj = {};
+            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            obj['yield'] = $("#yield").val();
+            obj['fert'] = $("#fertilizer").val()
+            $.ajax({
+                'url': '/rev_pred',
+                'method': 'POST',
+                'data': obj,
+                'dataType': 'json',
+                'success': d => {
+                    console.log(d);
+                    const dark = $("#dark").val() == 1 ? "bg-dark text-light" : "";
+                    for (let i in d) {
+                        const tmp = `<div class="row dummy g-1 mb-3">
+                            <div class="form-floating col-sm-10">
+                                <input type="text" class="form-control ${dark}" value="${d[i]}" step="any"
+                                    readonly>
+                                <label for="Area">${i}</label>
+                            </div>
+                        </div>`
+                        $("#unknown").before(tmp);
+                    }
+                }
+            })
 
         })
+
+        openSaveModel = () => {
+            object.saveModel.show();
+        }
+
         saveReport = () => {
-            var obj = { 'n': parseFloat(object.nitrogen.value), 'p': parseFloat(object.phosporus.value), 'k': parseFloat(object.pottasium.value), 'rain': parseFloat(object.rainfall.value), 'area': parseFloat(object.Area.value), 'pred': parseFloat(object.predictedValue) ,'month':object.month }
+            const name = $("#report_name").val()
+            if (name == "" || name == " ") {
+                alert("Please fill the name")
+                return;
+            }
+            object.saveModel.hide();
+            let obj = { 'name': name, 'n': parseFloat(object.nitrogen.value), 'p': parseFloat(object.phosporus.value), 'k': parseFloat(object.pottasium.value), 'rain': parseFloat(object.rainfall.value), 'area': parseFloat(object.Area.value), 'pred': parseFloat(object.predictedValue), 'month': object.month, 'moist': parseFloat(object.moisture.value), 'temp': parseFloat(object.temperature.value), 'crop': object.crop.value }
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
             console.log(obj);
             $.ajax({
@@ -1002,35 +1304,36 @@
                 'dataType': 'json',
                 'success': (d) => {
                     if (d.name != '-1') {
-                        var li = document.createElement('li');
+                        let li = document.createElement('li');
                         li.className = "nav-item";
                         li.innerHTML = `
-                        <a style="float: left;" id="report${d.name}" class="btn-link nav-link ReportList"
-                                onclick="showReport(this);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            Report ${d.name}
-                            <span style="display: none;" data-n=${d.n} data-p=${d.p}
-                                data-k=${d.k} data-rain=${d.rain} data-area=${d.area}
-                                data-pred=${d.pred} data-month = ${d.month}></span>
-                        </a>`;
+                <a style="float: left;" id="report${d.name}" class="btn-link nav-link ReportList"
+                        onclick="showReport(this);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Report ${d.name}
+                    <span style="display: none;" data-n=${d.n} data-p=${d.p}
+                        data-k=${d.k} data-rain=${d.rain} data-area=${d.area}
+                        data-pred=${d.pred} data-month = ${d.month} data-temp=${d.temp}
+                                    data-moist=${d.moist} data-crop=${d.crop}></span>
+                </a>`;
                         object.reportS.appendChild(li);
-                        var bsOffcanvas = $("#offcanvasWithBothOptions");
+                        let bsOffcanvas = $("#offcanvasWithBothOptions");
                         bsOffcanvas.offcanvas('hide');
-                        var child = object.toastHeader.children();
+                        let child = object.toastHeader.children();
                         child[0].setAttribute('src', "{% static 'img/success.svg' %}");
                         child[1].innerHTML = "Success";
                         object.toastBody.html("Report Saved Successfully");
-                        var toast = new bootstrap.Toast(object.toast);
+                        let toast = new bootstrap.Toast(object.toast);
                         toast.show();
                     }
                     else {
-                        var bsOffcanvas = $("#offcanvasWithBothOptions");
+                        let bsOffcanvas = $("#offcanvasWithBothOptions");
                         bsOffcanvas.offcanvas('hide');
-                        var child = object.toastHeader.children();
+                        let child = object.toastHeader.children();
                         child[0].setAttribute('src', "{% static 'img/error.svg' %}");
                         child[1].innerHTML = "Warning";
                         object.toastBody.html("Report Already Saved");
-                        var toast = new bootstrap.Toast(object.toast);
+                        let toast = new bootstrap.Toast(object.toast);
                         toast.show();
 
                     }
@@ -1039,49 +1342,41 @@
             })
         }
 
-        removeReportActiveClass = () => {
-            document.querySelectorAll(".ReportList").forEach((ele) => {
+        removeReportActiveClass = (idx, id) => {
+            document.querySelectorAll(".btn-link").forEach(ele => {
                 ele.classList.remove("active");
             })
+            $(`#${idx}`).addClass("active");
+            $(".px-md-4").each((_, ele) => {
+                $(ele).css("display", "none");
+            })
+            $(`#${id}`).css("display", "block");
         }
 
 
-        showReport = (id) => {
-            var dataEle = $(id.children[1])
+        showReport = id => {
+            let dataEle = $(id.children[1])
             console.log(dataEle)
-            object.reportH2.html(`Report ${id.id.slice(6)}`)
+            object.reportH2.html(`${id.id.slice(6)}`)
             object.reportN.val(dataEle.data("n"));
             object.reportP.val(dataEle.data("p"));
             object.reportK.val(dataEle.data("k"));
             object.reportRain.val(dataEle.data("rain"));
             object.reportArea.val(dataEle.data("area"));
             object.reportPred.val(dataEle.data("pred"));
-            object.reportDiv.css("display", "block");
             object.reportGrowth.val(dataEle.data("month"));
-            removeReportActiveClass();
-            $("#fill").css("display", "none");
-            $("#svr").css("display", "none");
-            $("#rid").css("display", "none");
-            $("#dtr").css("display", "none");
-            $("#las").css("display", "none");
-            $("#rf").css("display", "none");
-            $("#mlr").css("display", "none");
-            $("#1").removeClass("active");
-            $("#2").removeClass("active");
-            $("#3").removeClass("active");
-            $("#5").removeClass("active");
-            $("#7").removeClass("active");
-            $("#6").removeClass("active");
-            $("#4").removeClass("active");
-            $(id)[0].classList.add("active");
+            object.reportCrop.val(dataEle.data("crop"));
+            object.reportMoist.val(dataEle.data("moist"));
+            object.reportTemp.val(dataEle.data("temp"));
+            removeReportActiveClass($(id)[0].id, "Report");
 
         }
 
         deleteReport = () => {
-            var id = object.reportH2.html().slice(7);
-            var reportID = "#report" + id;
-            var ele = $(reportID).parent()
-            var obj = { 'id': id }
+            let id = object.reportH2.html().slice(7);
+            let reportID = "#report" + id;
+            let ele = $(reportID).parent()
+            let obj = { 'id': id }
             obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
             $.ajax({
                 'url': '/delete',
@@ -1090,14 +1385,13 @@
                 'dataType': 'json',
                 'success': (d) => {
                     ele.remove();
-                    var child = object.toastHeader.children();
+                    let child = object.toastHeader.children();
                     child[0].setAttribute('src', "{% static 'img/success.svg' %}");
                     child[1].innerHTML = "Success"
                     object.toastBody.html("Report Deleted Successfully");
-                    var toast = new bootstrap.Toast(object.toast);
+                    let toast = new bootstrap.Toast(object.toast);
                     toast.show();
                 }
-
             })
             changeToDiv(1);
         }
@@ -1105,140 +1399,47 @@
         changeToDiv = (ind) => {
             switch (ind) {
                 case 1: {
-                    $("#fill").css("display", "block");
-                    $("#svr").css("display", "none");
-                    $("#rid").css("display", "none");
-                    $("#las").css("display", "none");
-                    $("#dtr").css("display", "none");
-                    $("#rf").css("display", "none");
-                    $("#mlr").css("display", "none");
-                    $("#2").removeClass("active");
-                    $("#1").addClass("active");
-                    $("#3").removeClass("active");
-                    $("#7").removeClass("active");
-                    $("#5").removeClass("active");
-                    $("#6").removeClass("active");
-                    $("#4").removeClass("active");
-                    object.reportDiv.css("display", "none");
-                    removeReportActiveClass();
+                    removeReportActiveClass(ind, "fill");
                     break;
                 }
                 case 2: {
-                    $("#fill").css("display", "none");
-                    $("#svr").css("display", "block");
-                    $("#rid").css("display", "none");
-                    $("#dtr").css("display", "none");
-                    $("#las").css("display", "none");
-                    $("#rf").css("display", "none");
-                    $("#mlr").css("display", "none");
-                    $("#1").removeClass("active");
-                    $("#2").addClass("active");
-                    $("#3").removeClass("active");
-                    $("#5").removeClass("active");
-                    $("#7").removeClass("active");
-                    object.reportDiv.css("display", "none");
-                    $("#6").removeClass("active");
-                    $("#4").removeClass("active");
-                    removeReportActiveClass();
+                    object.svr.reset();
+                    object.svr.update();
+                    removeReportActiveClass(ind, "svr");
                     break;
                 }
                 case 3: {
-                    $("#fill").css("display", "none");
-                    $("#svr").css("display", "none");
-                    $("#rf").css("display", "none");
-                    $("#rid").css("display", "none");
-                    $("#las").css("display", "none");
-                    removeReportActiveClass();
-                    object.reportDiv.css("display", "none");
-                    $("#dtr").css("display", "block");
-                    $("#mlr").css("display", "none");
-                    $("#1").removeClass("active");
-                    $("#3").addClass("active");
-                    $("#2").removeClass("active");
-                    $("#7").removeClass("active");
-                    $("#5").removeClass("active");
-                    $("#6").removeClass("active");
-                    $("#4").removeClass("active");
+                    object.dtr.reset();
+                    object.dtr.update();
+                    removeReportActiveClass(ind, "dtr");
                     break;
                 }
                 case 4: {
-                    $("#fill").css("display", "none");
-                    $("#svr").css("display", "none");
-                    object.reportDiv.css("display", "none");
-                    $("#dtr").css("display", "none");
-                    $("#rid").css("display", "none");
-                    $("#rf").css("display", "block");
-                    $("#las").css("display", "none");
-                    removeReportActiveClass();
-                    $("#mlr").css("display", "none");
-                    $("#1").removeClass("active");
-                    $("#4").addClass("active");
-                    $("#2").removeClass("active");
-                    $("#3").removeClass("active");
-                    $("#7").removeClass("active");
-                    $("#6").removeClass("active");
-                    $("#5").removeClass("active");
+                    object.rf.reset();
+                    object.rf.update();
+                    removeReportActiveClass(ind, "rf");
                     break;
                 }
                 case 5: {
-                    $("#fill").css("display", "none");
-                    $("#svr").css("display", "none");
-                    $("#dtr").css("display", "none");
-                    $("#rf").css("display", "none");
-                    $("#rid").css("display", "none");
-                    $("#las").css("display", "none");
-                    removeReportActiveClass();
-                    $("#mlr").css("display", "block");
-                    object.reportDiv.css("display", "none");
-                    $("#1").removeClass("active");
-                    $("#5").addClass("active");
-                    $("#2").removeClass("active");
-                    $("#7").removeClass("active");
-                    $("#3").removeClass("active");
-                    $("#4").removeClass("active");
-                    $("#6").removeClass("active");
+                    object.mlr.reset();
+                    object.mlr.update();
+                    removeReportActiveClass(ind, "mlr");
                     break;
                 }
                 case 6: {
-                    $("#fill").css("display", "none");
-                    $("#svr").css("display", "none");
-                    $("#dtr").css("display", "none");
-                    removeReportActiveClass();
-                    $("#rf").css("display", "none");
-                    $("#mlr").css("display", "none");
-                    object.reportDiv.css("display", "none");
-                    $("#las").css("display", "none");
-                    $("#rid").css("display", "block");
-                    $("#1").removeClass("active");
-                    $("#6").addClass("active");
-                    $("#2").removeClass("active");
-                    $("#5").removeClass("active");
-                    $("#7").removeClass("active");
-                    $("#3").removeClass("active");
-                    $("#4").removeClass("active");
+                    object.rid.reset();
+                    object.rid.update();
+                    removeReportActiveClass(ind, "rid");
                     break;
                 }
                 case 7: {
-                    $("#fill").css("display", "none");
-                    $("#svr").css("display", "none");
-                    $("#dtr").css("display", "none");
-                    $("#rf").css("display", "none");
-                    object.reportDiv.css("display", "none");
-                    $("#mlr").css("display", "none");
-                    removeReportActiveClass();
-                    $("#rid").css("display", "none");
-                    $("#las").css("display", "block");
-                    $("#1").removeClass("active");
-                    $("#6").removeClass("active");
-                    $("#7").addClass("active");
-                    $("#2").removeClass("active");
-                    $("#5").removeClass("active");
-                    $("#3").removeClass("active");
-                    $("#4").removeClass("active");
+                    object.las.reset();
+                    object.las.update();
+                    removeReportActiveClass(ind, "las");
                     break;
                 }
                 case 8: {
-                    var obj = {};
+                    let obj = {};
                     obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
                     $.ajax({
                         'url': '/logout',
@@ -1254,8 +1455,8 @@
                     break;
                 }
                 case 9: {
-                    var ico = $("#icon");
-                    var isDark = $("#dark")
+                    let ico = $("#icon");
+                    let isDark = $("#dark");
                     if (isDark.val() == 0) {
                         // It is not in dark mode
                         ico.remove();
@@ -1282,6 +1483,9 @@
                         $(".btn-close").addClass("btn-close-white");
                         $('.offcanvas').addClass("bg-dark text-light");
                         $(".modal-content").addClass("bg-dark text-light");
+                        $("#existing_info").addClass("table-dark");
+                        $("#proposed_info").addClass("table-dark");
+
                     }
                     else {
                         // It is in dark mode
@@ -1310,12 +1514,298 @@
                         $('.offcanvas').removeClass("bg-dark text-light");
                         $(".btn-close").removeClass("btn-close-white");
                         $(".modal-content").removeClass("bg-dark text-light");
+                        $("#existing_info").removeClass("table-dark");
+                        $("#proposed_info").removeClass("table-dark");
+
                     }
+                    break;
+                }
+
+                case 10: {
+                    removeReportActiveClass(ind, "pa");
+                    break;
+                }
+
+                case 11: {
+                    removeReportActiveClass(ind, "re_pre");
                     break;
                 }
             }
         }
+
+        const transparentize = (color, alpha) => {
+            color = color.replace("#", "");
+            let aRgbHex = color.match(/.{1,2}/g);
+            let r = parseInt(aRgbHex[0], 16);
+            let g = parseInt(aRgbHex[1], 16);
+            let b = parseInt(aRgbHex[2], 16);
+
+            const a = (1 - alpha) * 255;
+            const calc = x => Math.round((x - a) / alpha);
+
+            return `rgba(${calc(r)}, ${calc(g)}, ${calc(b)}, ${alpha})`;
+        }
+
+        function colorize(opaque, hover, ctx) {
+            const v = ctx.raw;
+            const c = v < 35 ? '#D60000'
+                : v < 55 ? '#F46300'
+                    : v < 75 ? '#0358B6'
+                        : '#44DE28';
+
+            const opacity = 0.5;
+
+            return opaque ? c : transparentize(c, opacity);
+        }
+
+        function hoverColorize(ctx) {
+            return colorize(false, true, ctx);
+        }
+
+        destroyCharts = () => {
+            if (object.existingPerformance != null) object.existingPerformance.destroy();
+            if (object.proposedPerformance != null) object.existingPerformance.destroy();
+        }
+
+        function createRadialGradient3(context, c1, c2, c3) {
+            const chartArea = context.chart.chartArea;
+            if (!chartArea) {
+                // This case happens on initial chart load
+                return;
+            }
+
+            const chartWidth = chartArea.right - chartArea.left;
+            const chartHeight = chartArea.bottom - chartArea.top;
+            if (width !== chartWidth || height !== chartHeight) {
+                cache.clear();
+            }
+            let gradient = cache.get(c1 + c2 + c3);
+            if (!gradient) {
+                // Create the gradient because this is either the first render
+                // or the size of the chart has changed
+                width = chartWidth;
+                height = chartHeight;
+                const centerX = (chartArea.left + chartArea.right) / 2;
+                const centerY = (chartArea.top + chartArea.bottom) / 2;
+                const r = Math.min(
+                    (chartArea.right - chartArea.left) / 2,
+                    (chartArea.bottom - chartArea.top) / 2
+                );
+                const ctx = context.chart.ctx;
+                gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, r);
+                gradient.addColorStop(0, c1);
+                gradient.addColorStop(0.5, c2);
+                gradient.addColorStop(1, c3);
+                cache.set(c1 + c2 + c3, gradient);
+            }
+
+            return gradient;
+        }
+
+        randomColorGenerator = (n, opacity = 6) => {
+            let makeColorCode = '0123456789ABCDEF';
+            let colors = []
+            for (let i = 0; i < n; ++i) {
+                let code = '#';
+                for (let count = 0; count < opacity; count++) {
+                    code = code + makeColorCode[Math.floor(Math.random() * 16)];
+                }
+                colors.push(code);
+            }
+            return (n === 1) ? colors[0] : colors;
+        }
+
+        performanceGraph = (name, dataVal, key = 1) => {
+            if (dataVal === null) return;
+            const labels = ['Cpu', 'Ram', 'Time', 'Accuracy'];
+            const DATA = [];
+            const bgColor = (key === 6) ? randomColorGenerator(3, 8) : randomColorGenerator(3);
+            for (let i in dataVal) {
+                const borderColor = randomColorGenerator(1);
+                DATA.push({
+                    label: 'Performance for ' + name + ' - ' + parseInt(i),
+                    data: dataVal[i],
+                    fill: false,
+                    tension: 0.4,
+                    pointStyle: 'circle',
+                    pointRadius: 7,
+                    pointHoverRadius: 9,
+                    borderWidth: 2,
+                    borderColor: borderColor,
+                    backgroundColor: bgColor,
+                })
+            }
+            const data = {
+                labels: labels,
+                datasets: DATA
+            };
+            let delayed;
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    animation: {
+                        onComplete: () => {
+                            delayed = true;
+                        },
+                        delay: context => {
+                            let delay = 100;
+                            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                                delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                            }
+                            return delay;
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: `${name.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))} Performance Analysis`
+                        }
+                    },
+                },
+
+            }
+
+            resetGraph(name);
+
+            switch (key) {
+                case 1: config['type'] = 'line'; break;
+                case 2: {
+                    config['type'] = 'bar';
+                    const datas = config['data']['datasets'];
+                    for (let i in datas) {
+                        datas[i]['borderRadius'] = 10
+                        datas[i]['borderSkipped'] = false;
+                    }
+                    config['data']['datasets'] = datas;
+                    break;
+                }
+                case 3: {
+                    config['type'] = 'polarArea';
+                    break;
+                }
+                case 4: config['type'] = 'doughnut'; break;
+                case 5: config['type'] = 'pie'; break;
+                case 6: {
+                    config['type'] = 'radar';
+                    const datas = config['data']['datasets'];
+                    for (let i in datas) {
+                        datas[i]['fill'] = true;
+                    }
+                    config['data']['datasets'] = datas;
+                    break;
+                }
+
+                default: break;
+            }
+
+            if (name === "existing") {
+                object.existingPerformance = new Chart($(`#${name}`), config)
+            } else {
+                object.proposedPerformance = new Chart($(`#${name}`), config)
+            }
+
+        }
+
+        generateTable = (key, value) => {
+            const tr = document.createElement('tr');
+            const tdKey = document.createElement('td');
+            tdKey.innerHTML = key;
+            const tdValue = document.createElement('td');
+            tdValue.innerHTML = value;
+            tr.appendChild(tdKey);
+            tr.appendChild(tdValue);
+            return tr;
+        }
+
+        resetTable = id => {
+            $(`#${id}`).empty();
+        }
+
+        $('a[data-bs-toggle="tab"]').on('show.bs.tab', e => {
+            const ele = $(e.currentTarget);
+            if (ele.data("which") === "existing")
+                performanceGraph(ele.data("which"), object.existingData, parseInt(ele.html()));
+            else
+                performanceGraph(ele.data("which"), object.proposedData, parseInt(ele.html()));
+
+        });
+
+        resetGraph = id => {
+            if (id === "existing") {
+                if (object.existingPerformance !== null)
+                    object.existingPerformance.destroy();
+            } else {
+                if (object.proposedPerformance !== null)
+                    object.proposedPerformance.destroy();
+            }
+        }
+
+        resetNav = id => {
+            const ele = $(`#${id}_ul`);
+            ele.children('li').each((e, li) => {
+                if (e === 0)
+                    $(li).children('a').addClass("active")
+                else
+                    $(li).children('a').removeClass("active");
+            })
+        }
+
+        addRemoveLoader = (id, remove = false) => {
+            const ele = $(`#${id}_btn`);
+            const tmp = ele.html();
+            if (!remove)
+                ele.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;${tmp}`)
+            else
+                ele.html(`Start Testing - ${id.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))}`);
+        }
+
+
+        startTesting = id => {
+            addRemoveLoader(id);
+            resetNav(id);
+            resetGraph(id);
+            resetTable(`${id}_body`);
+            const nav = $(`#${id}_ul`);
+            const table = $(`#${id}_info`)
+            table.css("display", "none");
+            nav.css("display", "none");
+            let obj = { 'id': id };
+            console.log(`started .... ${id}`);
+            const tableBody = $(`#${id}_body`);
+            obj['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+            $.ajax({
+                'url': '/test',
+                'method': 'POST',
+                'data': obj,
+                'dataType': 'json',
+                'success': (d) => {
+                    nav.css("display", "flex");
+                    addRemoveLoader(id, true);
+                    for (let key in d) {
+                        if (key === 'val') continue;
+                        tableBody.append(generateTable(key, d[key]))
+                    }
+                    const datas = d['val'];
+                    if (id === "existing") {
+                        object.existingData = datas;
+                    } else {
+                        object.proposedData = datas;
+                    }
+                    table.css("display", "block");
+
+                    performanceGraph(id, d['val']);
+
+                }
+            });
+        }
+
     </script>
+
+
 </body>
 
 </html>

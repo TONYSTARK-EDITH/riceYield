@@ -9,14 +9,14 @@ class TestModels(TestCase):
         print(f"MlModle ------- {length}")
     
     def test_svr(self):
-        svr.objects.bulk_create([svr(predicted=215)])
-        length = len(list(svr.objects.all()))
+        Svr.objects.bulk_create([Svr(predicted=215)])
+        length = len(list(Svr.objects.all()))
         self.assertEqual(length,1)
         print(f"SVR ------- {length}")
     
     def test_mlr(self):
-        mlr.objects.bulk_create([mlr(predicted=215)])
-        length = len(list(mlr.objects.all()))
+        Mlr.objects.bulk_create([Mlr(predicted=215)])
+        length = len(list(Mlr.objects.all()))
         self.assertEqual(length,1)
         print(f"MLR ------- {length}")
 
@@ -33,14 +33,14 @@ class TestModels(TestCase):
         print(f"RF ------- {length}")
     
     def test_lasso(self):
-        lasso.objects.bulk_create([lasso(predicted=215)])
-        length = len(list(lasso.objects.all()))
+        Lasso.objects.bulk_create([Lasso(predicted=215)])
+        length = len(list(Lasso.objects.all()))
         self.assertEqual(length,1)
         print(f"LASSO ------- {length}")
     
     def test_ridge(self):
-        ridge.objects.bulk_create([ridge(predicted=215)])
-        length = len(list(ridge.objects.all()))
+        RIDGE.objects.bulk_create([RIDGE(predicted=215)])
+        length = len(list(RIDGE.objects.all()))
         self.assertEqual(length,1)
         print(f"RIDGE ------- {length}")      
     

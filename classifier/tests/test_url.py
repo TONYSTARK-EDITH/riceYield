@@ -31,13 +31,13 @@ class TestUrls(TestCase):
         url = reverse("predict")
         resolved_url = resolve(url)
         print(resolved_url.func)
-        self.assertEqual(resolved_url.func, Predict)
+        self.assertEqual(resolved_url.func, predict_vals)
 
     def test_save_page(self):
         url = reverse("save")
         resolved_url = resolve(url)
         print(resolved_url.func)
-        self.assertEqual(resolved_url.func, saveReports)
+        self.assertEqual(resolved_url.func, savereports)
 
     def test_delete_page(self):
         url = reverse("delete")

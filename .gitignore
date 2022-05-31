@@ -1,2 +1,6 @@
 ./vscode
 ../env
+./venv
+.idea
+.log
+*.sqlite3
